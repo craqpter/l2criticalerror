@@ -28,10 +28,29 @@ const countryNames: Record<string, string> = {
   'TR': 'Turkey', 'IL': 'Israel', 'AE': 'United Arab Emirates', 'SA': 'Saudi Arabia', 'QA': 'Qatar', 'KW': 'Kuwait', 'BH': 'Bahrain', 'OM': 'Oman'
 };
 
+// Persistent visitor statistics using localStorage
+const getPersistentStats = () => {
+  try {
+    const stored = localStorage.getItem('l2criticalerror_stats');
+    return stored ? JSON.parse(stored) : {};
+  } catch {
+    return {};
+  }
+};
+
+const savePersistentStats = (stats: Record<string, number>) => {
+  try {
+    localStorage.setItem('l2criticalerror_stats', JSON.stringify(stats));
+  } catch (error) {
+    console.warn('Could not save stats to localStorage:', error);
+  }
+};
+
 function GlobeSection() {
   const canvasRef = useRef<HTMLCanvasElement>();
   const [counter, setCounter] = useState(0);
   const [countryStats, setCountryStats] = useState<Map<string, number>>(new Map());
+  const [persistentStats, setPersistentStats] = useState<Record<string, number>>({});
 
   const positions = useRef<
     Map<
@@ -47,7 +66,7 @@ function GlobeSection() {
   const socket = usePartySocket({
     room: "default",
     party: "globe",
-    onMessage(evt) {
+    onMessage(evt: any) {
       const message = JSON.parse(evt.data as string) as OutgoingMessage;
       if (message.type === "add-marker") {
         positions.current.set(message.position.id, {
@@ -58,19 +77,27 @@ function GlobeSection() {
         
         // Update country statistics
         if (message.position.country) {
-          setCountryStats(prev => {
+          setCountryStats((prev: any) => {
             const newStats = new Map(prev);
             const current = newStats.get(message.position.country) || 0;
             newStats.set(message.position.country, current + 1);
             return newStats;
           });
+
+          // Update persistent stats
+          setPersistentStats((prev: any) => {
+            const newPersistent = { ...prev };
+            newPersistent[message.position.country] = (newPersistent[message.position.country] || 0) + 1;
+            savePersistentStats(newPersistent);
+            return newPersistent;
+          });
         }
         
-        setCounter((c) => c + 1);
+        setCounter((c: any) => c + 1);
       } else {
         const position = positions.current.get(message.id);
         if (position?.country) {
-          setCountryStats(prev => {
+          setCountryStats((prev: any) => {
             const newStats = new Map(prev);
             const current = newStats.get(position.country) || 0;
             if (current > 1) {
@@ -82,10 +109,15 @@ function GlobeSection() {
           });
         }
         positions.current.delete(message.id);
-        setCounter((c) => Math.max(0, c - 1));
+        setCounter((c: any) => Math.max(0, c - 1));
       }
     },
   });
+
+  // Load persistent stats on component mount
+  useEffect(() => {
+    setPersistentStats(getPersistentStats());
+  }, []);
 
   useEffect(() => {
     let phi = 0;
@@ -117,10 +149,15 @@ function GlobeSection() {
     };
   }, []);
 
-  // Sort countries by visitor count
+  // Sort countries by visitor count (current session)
   const sortedCountries = Array.from(countryStats.entries())
     .sort(([,a], [,b]) => b - a)
-    .slice(0, 10); // Show top 10 countries
+    .slice(0, 10);
+
+  // Sort countries by all-time visitor count
+  const sortedAllTime = Object.entries(persistentStats)
+    .sort(([,a], [,b]) => b - a)
+    .slice(0, 10);
 
   return (
     <section className="globe-container">
@@ -142,27 +179,59 @@ function GlobeSection() {
 
       <div className="stats-panel">
         <h3>📊 Global Statistics</h3>
-        <div className="country-stats">
-          {sortedCountries.length > 0 ? (
-            <>
-              {sortedCountries.map(([countryCode, count], index) => (
-                <div key={countryCode} className="country-stat">
-                  <span className="country-flag">{countryFlags[countryCode] || '🌍'}</span>
-                  <span className="country-name">{countryNames[countryCode] || countryCode}</span>
-                  <span className={`country-count ${index < 3 ? `top-${index + 1}` : ''}`}>
-                    {count}
-                  </span>
-                </div>
-              ))}
-              {countryStats.size > 10 && (
-                <div className="more-countries-indicator">
-                  <span>+{countryStats.size - 10} more countries</span>
-                </div>
-              )}
-            </>
-          ) : (
-            <p className="no-stats">No visitors yet</p>
-          )}
+        
+        {/* Current Session */}
+        <div className="stats-section">
+          <h4>🟢 Current Session</h4>
+          <div className="country-stats">
+            {sortedCountries.length > 0 ? (
+              <>
+                {sortedCountries.map(([countryCode, count], index) => (
+                  <div key={countryCode} className="country-stat">
+                    <span className="country-flag">{countryFlags[countryCode] || '🌍'}</span>
+                    <span className="country-name">{countryNames[countryCode] || countryCode}</span>
+                    <span className={`country-count ${index < 3 ? `top-${index + 1}` : ''}`}>
+                      {count}
+                    </span>
+                  </div>
+                ))}
+                {countryStats.size > 10 && (
+                  <div className="more-countries-indicator">
+                    <span>+{countryStats.size - 10} more countries</span>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="no-stats">No visitors yet</p>
+            )}
+          </div>
+        </div>
+
+        {/* All-Time Statistics */}
+        <div className="stats-section">
+          <h4>⭐ All-Time Visitors</h4>
+          <div className="country-stats">
+            {sortedAllTime.length > 0 ? (
+              <>
+                {sortedAllTime.map(([countryCode, count], index) => (
+                  <div key={countryCode} className="country-stat all-time">
+                    <span className="country-flag">{countryFlags[countryCode] || '🌍'}</span>
+                    <span className="country-name">{countryNames[countryCode] || countryCode}</span>
+                    <span className={`country-count all-time ${index < 3 ? `top-${index + 1}` : ''}`}>
+                      {count}
+                    </span>
+                  </div>
+                ))}
+                {Object.keys(persistentStats).length > 10 && (
+                  <div className="more-countries-indicator">
+                    <span>+{Object.keys(persistentStats).length - 10} more countries</span>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="no-stats">No historical data</p>
+            )}
+          </div>
         </div>
       </div>
     </section>
@@ -170,8 +239,56 @@ function GlobeSection() {
 }
 
 function App() {
+  const [serverStatus] = useState({
+    online: true,
+    players: 247,
+    maxPlayers: 1000
+  });
+
+  const [musicPlaying, setMusicPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Background music functionality
+  useEffect(() => {
+    audioRef.current = new Audio('/music/background.mp3');
+    audioRef.current.loop = true;
+    audioRef.current.volume = 0.3;
+  }, []);
+
+  const toggleMusic = () => {
+    if (audioRef.current) {
+      if (musicPlaying) {
+        audioRef.current.pause();
+        setMusicPlaying(false);
+      } else {
+        audioRef.current.play().catch(() => {
+          console.log('Audio autoplay blocked');
+        });
+        setMusicPlaying(true);
+      }
+    }
+  };
+
   return (
     <div className="App">
+      {/* Server Status Indicator */}
+      <div className="server-status">
+        <div className={`status-badge ${serverStatus.online ? 'online' : 'offline'}`}>
+          <span className="status-dot"></span>
+          {serverStatus.online ? '🟢 Online' : '🔴 Offline'}
+          <span className="player-count">
+            {serverStatus.players}/{serverStatus.maxPlayers} Players
+          </span>
+        </div>
+      </div>
+
+      {/* Music Control */}
+      <div className="music-control">
+        <button className="music-toggle" onClick={toggleMusic}>
+          {musicPlaying ? '🔇 Stop Music' : '🎵 Background Music'}
+        </button>
+      </div>
+
       <header>
         <h1>✨ Lineage 2 CriticalError C4 ✨</h1>
         <p>Old-School C4 Private Server</p>
