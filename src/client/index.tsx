@@ -144,13 +144,22 @@ function GlobeSection() {
         <h3>📊 Global Statistics</h3>
         <div className="country-stats">
           {sortedCountries.length > 0 ? (
-            sortedCountries.map(([countryCode, count]) => (
-              <div key={countryCode} className="country-stat">
-                <span className="country-flag">{countryFlags[countryCode] || '🌍'}</span>
-                <span className="country-name">{countryNames[countryCode] || countryCode}</span>
-                <span className="country-count">{count}</span>
-              </div>
-            ))
+            <>
+              {sortedCountries.map(([countryCode, count], index) => (
+                <div key={countryCode} className="country-stat">
+                  <span className="country-flag">{countryFlags[countryCode] || '🌍'}</span>
+                  <span className="country-name">{countryNames[countryCode] || countryCode}</span>
+                  <span className={`country-count ${index < 3 ? `top-${index + 1}` : ''}`}>
+                    {count}
+                  </span>
+                </div>
+              ))}
+              {countryStats.size > 10 && (
+                <div className="more-countries-indicator">
+                  <span>+{countryStats.size - 10} more countries</span>
+                </div>
+              )}
+            </>
           ) : (
             <p className="no-stats">No visitors yet</p>
           )}
