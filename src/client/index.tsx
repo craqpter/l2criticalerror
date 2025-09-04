@@ -276,9 +276,6 @@ function App() {
         <div className={`status-badge ${serverStatus.online ? 'online' : 'offline'}`}>
           <span className="status-dot"></span>
           {serverStatus.online ? '🟢 Online' : '🔴 Offline'}
-          <span className="player-count">
-            {serverStatus.players}/{serverStatus.maxPlayers} Players
-          </span>
         </div>
       </div>
 
