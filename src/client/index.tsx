@@ -210,7 +210,9 @@ function App() {
         <a href="https://instagram.com/l2criticalerror" target="_blank">
           📸 Instagram
         </a>
-        <a href="#">📥 Download Patch</a>
+        <a href="https://drive.google.com/file/d/14LLNAB8eAZ3B7WUywC3U4159OkV9WpzZ/view?usp=sharing" target="_blank">
+          📥 Download Client
+        </a>
       </section>
 
       <footer>
