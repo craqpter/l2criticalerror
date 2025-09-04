@@ -73,8 +73,11 @@ a {
   padding: 1.5rem;
   min-width: 300px;
   max-width: 350px;
+  max-height: 500px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
 }
 
 .stats-panel h3 {
@@ -82,12 +85,38 @@ a {
   margin-bottom: 1rem;
   font-size: 1.2rem;
   text-align: center;
+  flex-shrink: 0;
 }
 
 .country-stats {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  overflow-y: auto;
+  max-height: 350px;
+  padding-right: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+/* Custom scrollbar for webkit browsers */
+.country-stats::-webkit-scrollbar {
+  width: 6px;
+}
+
+.country-stats::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.country-stats::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.country-stats::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
 }
 
 .country-stat {
@@ -99,11 +128,27 @@ a {
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .country-stat:hover {
   background: rgba(255, 255, 255, 0.1);
   transform: translateX(5px);
+}
+
+.country-stat:first-child {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.2) 0%, rgba(238, 90, 36, 0.2) 100%);
+  border-color: rgba(255, 107, 107, 0.3);
+}
+
+.country-stat:nth-child(2) {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 152, 0, 0.2) 100%);
+  border-color: rgba(255, 193, 7, 0.3);
+}
+
+.country-stat:nth-child(3) {
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(139, 195, 74, 0.2) 100%);
+  border-color: rgba(76, 175, 80, 0.3);
 }
 
 .country-flag {
@@ -116,6 +161,9 @@ a {
   text-align: left;
   color: #ccc;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .country-count {
@@ -127,6 +175,32 @@ a {
   font-size: 0.9rem;
   min-width: 2rem;
   text-align: center;
+  flex-shrink: 0;
+}
+
+.country-count.top-1 {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+}
+
+.country-count.top-2 {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.4);
+}
+
+.country-count.top-3 {
+  background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+}
+
+.more-countries-indicator {
+  text-align: center;
+  padding: 0.5rem;
+  color: #888;
+  font-size: 0.8rem;
+  font-style: italic;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 0.5rem;
 }
 
 .no-stats {
