@@ -16,15 +16,20 @@ export class Globe extends Server {
     // First, let's extract the position from the Cloudflare headers
     const latitude = ctx.request.cf?.latitude as string | undefined;
     const longitude = ctx.request.cf?.longitude as string | undefined;
+    const country = ctx.request.cf?.country as string | undefined;
+    
     if (!latitude || !longitude) {
       console.warn(`Missing position information for connection ${conn.id}`);
       return;
     }
+    
     const position = {
       lat: parseFloat(latitude),
       lng: parseFloat(longitude),
       id: conn.id,
+      country: country || 'Unknown',
     };
+    
     // And save this on the connection's state
     conn.setState({
       position,
@@ -79,6 +84,24 @@ export class Globe extends Server {
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    const url = new URL(request.url);
+    
+    // Handle server info page route
+    if (url.pathname === "/server-info") {
+      try {
+        const serverInfoHtml = await env.ASSETS.get("server-info.html");
+        if (serverInfoHtml) {
+          return new Response(serverInfoHtml.body, {
+            headers: {
+              "Content-Type": "text/html;charset=utf-8",
+            },
+          });
+        }
+      } catch (error) {
+        console.error("Error serving server-info.html:", error);
+      }
+    }
+    
     return (
       (await routePartykitRequest(request, { ...env })) ||
       new Response("Not Found", { status: 404 })
