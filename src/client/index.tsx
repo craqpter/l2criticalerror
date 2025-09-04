@@ -252,7 +252,7 @@ function App() {
   useEffect(() => {
     audioRef.current = new Audio('/music/background.mp3');
     audioRef.current.loop = true;
-    audioRef.current.volume = 0.3;
+    audioRef.current.volume = 0.9;
   }, []);
 
   const toggleMusic = () => {
