@@ -68,6 +68,8 @@ a {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  min-width: 120px;
+  justify-content: center;
 }
 
 .status-badge.online {
