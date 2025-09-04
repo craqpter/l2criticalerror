@@ -5,19 +5,14 @@ import { createRoot } from "react-dom/client";
 import createGlobe from "cobe";
 import usePartySocket from "partysocket/react";
 
-// The type of messages we'll be receiving from the server
+// Message type from your server
 import type { OutgoingMessage } from "../shared";
 import type { LegacyRef } from "react";
 
-function App() {
-  // A reference to the canvas element where we'll render the globe
+function GlobeSection() {
   const canvasRef = useRef<HTMLCanvasElement>();
-  // The number of markers we're currently displaying
   const [counter, setCounter] = useState(0);
-  // A map of marker IDs to their positions
-  // Note that we use a ref because the globe's `onRender` callback
-  // is called on every animation frame, and we don't want to re-render
-  // the component on every frame.
+
   const positions = useRef<
     Map<
       string,
@@ -27,32 +22,26 @@ function App() {
       }
     >
   >(new Map());
-  // Connect to the PartyServer server
+
   const socket = usePartySocket({
     room: "default",
     party: "globe",
     onMessage(evt) {
       const message = JSON.parse(evt.data as string) as OutgoingMessage;
       if (message.type === "add-marker") {
-        // Add the marker to our map
         positions.current.set(message.position.id, {
           location: [message.position.lat, message.position.lng],
           size: message.position.id === socket.id ? 0.1 : 0.05,
         });
-        // Update the counter
         setCounter((c) => c + 1);
       } else {
-        // Remove the marker from our map
         positions.current.delete(message.id);
-        // Update the counter
-        setCounter((c) => c - 1);
+        setCounter((c) => Math.max(0, c - 1));
       }
     },
   });
 
   useEffect(() => {
-    // The angle of rotation of the globe
-    // We'll update this on every frame to make the globe spin
     let phi = 0;
 
     const globe = createGlobe(canvasRef.current as HTMLCanvasElement, {
@@ -71,13 +60,7 @@ function App() {
       markers: [],
       opacity: 0.7,
       onRender: (state) => {
-        // Called on every animation frame.
-        // `state` will be an empty object, return updated params.
-
-        // Get the current positions from our map
         state.markers = [...positions.current.values()];
-
-        // Rotate the globe
         state.phi = phi;
         phi += 0.01;
       },
@@ -89,26 +72,74 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <h1>Where's everyone at?</h1>
-      {counter !== 0 ? (
+    <section className="globe">
+      <h2>🌍 Where’s everyone at?</h2>
+      {counter > 0 ? (
         <p>
-          <b>{counter}</b> {counter === 1 ? "person" : "people"} connected.
+          <b>{counter}</b> {counter === 1 ? "person" : "people"} connected
         </p>
       ) : (
         <p>&nbsp;</p>
       )}
 
-      {/* The canvas where we'll render the globe */}
       <canvas
         ref={canvasRef as LegacyRef<HTMLCanvasElement>}
         style={{ width: 400, height: 400, maxWidth: "100%", aspectRatio: 1 }}
       />
+    </section>
+  );
+}
 
-      {/* Let's give some credit */}
+function App() {
+  return (
+    <div className="App">
+      <header>
+        <h1>✨ Lineage 2 CriticalError C4 ✨</h1>
+        <p>Old-School C4 Private Server</p>
+      </header>
+
+      <section className="rates">
+        <h2>📊 Server Rates</h2>
+        <p>
+          XP/SP: x10
+          <br />
+          Adena: x5
+          <br />
+          Drops/Spoil: x5
+          <br />
+          Quest Rewards: x2
+          <br />
+          Pet XP: x15
+        </p>
+        <p>Features: NpcBuffer • MasterClass • Craft XP</p>
+      </section>
+
+      {/* 🔥 Globe inserted here */}
+      <GlobeSection />
+
+      <section className="links">
+        <h2>🔗 Quick Links</h2>
+        <a href="https://t.me/l2CriticalError" target="_blank">
+          📢 Telegram Channel
+        </a>
+        <a href="https://t.me/lineage2c4bot" target="_blank">
+          🤖 Registration Bot
+        </a>
+        <a href="https://instagram.com/l2criticalerror" target="_blank">
+          📸 Instagram
+        </a>
+        <a href="#">📥 Download Patch</a>
+      </section>
+
+      <footer>
+        <p>
+          Inspired by legendary Lineage 2 servers — Arax, Starnet, Moscow,
+          L2Firebird, L2Reworld
+        </p>
+        <p>&copy; 2025 Lineage 2 CriticalError</p>
+      </footer>
     </div>
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 createRoot(document.getElementById("root")!).render(<App />);
