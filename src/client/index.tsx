@@ -28,29 +28,15 @@ const countryNames: Record<string, string> = {
   'TR': 'Turkey', 'IL': 'Israel', 'AE': 'United Arab Emirates', 'SA': 'Saudi Arabia', 'QA': 'Qatar', 'KW': 'Kuwait', 'BH': 'Bahrain', 'OM': 'Oman'
 };
 
-// Persistent visitor statistics using localStorage
-const getPersistentStats = () => {
-  try {
-    const stored = localStorage.getItem('l2criticalerror_stats');
-    return stored ? JSON.parse(stored) : {};
-  } catch {
-    return {};
-  }
-};
-
-const savePersistentStats = (stats: Record<string, number>) => {
-  try {
-    localStorage.setItem('l2criticalerror_stats', JSON.stringify(stats));
-  } catch (error) {
-    console.warn('Could not save stats to localStorage:', error);
-  }
-};
+// Global stats are now handled by the server via Durable Object storage
 
 function GlobeSection() {
   const canvasRef = useRef<HTMLCanvasElement>();
   const [counter, setCounter] = useState(0);
   const [countryStats, setCountryStats] = useState<Map<string, number>>(new Map());
-  const [persistentStats, setPersistentStats] = useState<Record<string, number>>({});
+  const [globalStats, setGlobalStats] = useState<Record<string, number>>({});
+  const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
 
   const positions = useRef<
     Map<
@@ -83,18 +69,10 @@ function GlobeSection() {
             newStats.set(message.position.country, current + 1);
             return newStats;
           });
-
-          // Update persistent stats
-          setPersistentStats((prev: any) => {
-            const newPersistent = { ...prev };
-            newPersistent[message.position.country] = (newPersistent[message.position.country] || 0) + 1;
-            savePersistentStats(newPersistent);
-            return newPersistent;
-          });
         }
         
         setCounter((c: any) => c + 1);
-      } else {
+      } else if (message.type === "remove-marker") {
         const position = positions.current.get(message.id);
         if (position?.country) {
           setCountryStats((prev: any) => {
@@ -110,14 +88,11 @@ function GlobeSection() {
         }
         positions.current.delete(message.id);
         setCounter((c: any) => Math.max(0, c - 1));
+      } else if (message.type === "global-stats") {
+        setGlobalStats(message.stats);
       }
     },
   });
-
-  // Load persistent stats on component mount
-  useEffect(() => {
-    setPersistentStats(getPersistentStats());
-  }, []);
 
   useEffect(() => {
     let phi = 0;
@@ -142,6 +117,44 @@ function GlobeSection() {
         state.phi = phi;
         phi += 0.01;
       },
+      onMouseMove: (coords) => {
+        // Find the closest marker to the mouse position
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const x = coords.x * rect.width;
+        const y = coords.y * rect.height;
+        
+        let closestMarker = null;
+        let closestDistance = Infinity;
+        
+        for (const [id, marker] of positions.current) {
+          if (!marker.country) continue;
+          
+          // Convert lat/lng to screen coordinates (simplified)
+          const markerX = (marker.location[1] + 180) / 360 * rect.width;
+          const markerY = (90 - marker.location[0]) / 180 * rect.height;
+          
+          const distance = Math.sqrt((x - markerX) ** 2 + (y - markerY) ** 2);
+          if (distance < 30 && distance < closestDistance) {
+            closestDistance = distance;
+            closestMarker = marker;
+          }
+        }
+        
+        if (closestMarker && closestMarker.country) {
+          setHoveredCountry(closestMarker.country);
+          setTooltipPosition({ x: x + rect.left, y: y + rect.top });
+        } else {
+          setHoveredCountry(null);
+          setTooltipPosition(null);
+        }
+      },
+      onMouseLeave: () => {
+        setHoveredCountry(null);
+        setTooltipPosition(null);
+      },
     });
 
     return () => {
@@ -154,10 +167,17 @@ function GlobeSection() {
     .sort(([,a], [,b]) => b - a)
     .slice(0, 10);
 
-  // Sort countries by all-time visitor count
-  const sortedAllTime = Object.entries(persistentStats)
+  // Sort countries by all-time visitor count (from server)
+  const sortedAllTime = Object.entries(globalStats)
     .sort(([,a], [,b]) => b - a)
     .slice(0, 10);
+
+  // Handle country click to focus globe
+  const handleCountryClick = (countryCode: string) => {
+    // This would require more complex globe manipulation
+    // For now, we'll just highlight it in the UI
+    console.log(`Focusing on ${countryCode}`);
+  };
 
   return (
     <section className="globe-container">
@@ -171,10 +191,42 @@ function GlobeSection() {
           <p>&nbsp;</p>
         )}
 
-        <canvas
-          ref={canvasRef as LegacyRef<HTMLCanvasElement>}
-          style={{ width: 400, height: 400, maxWidth: "100%", aspectRatio: 1 }}
-        />
+        <div className="globe-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
+          <canvas
+            ref={canvasRef as LegacyRef<HTMLCanvasElement>}
+            style={{ width: 400, height: 400, maxWidth: "100%", aspectRatio: 1 }}
+          />
+          
+          {/* Tooltip */}
+          {hoveredCountry && tooltipPosition && (
+            <div
+              className="country-tooltip"
+              style={{
+                position: 'fixed',
+                left: tooltipPosition.x + 10,
+                top: tooltipPosition.y - 10,
+                zIndex: 1000,
+                background: 'rgba(0, 0, 0, 0.9)',
+                color: 'white',
+                padding: '8px 12px',
+                borderRadius: '6px',
+                fontSize: '14px',
+                fontWeight: '600',
+                pointerEvents: 'none',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span>{countryFlags[hoveredCountry] || '🌍'}</span>
+                <span>{countryNames[hoveredCountry] || hoveredCountry}</span>
+                <span style={{ color: '#ff6b6b', fontWeight: 'bold' }}>
+                  {countryStats.get(hoveredCountry) || 0} online
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="stats-panel">
@@ -187,7 +239,12 @@ function GlobeSection() {
             {sortedCountries.length > 0 ? (
               <>
                 {sortedCountries.map(([countryCode, count], index) => (
-                  <div key={countryCode} className="country-stat">
+                  <div 
+                    key={countryCode} 
+                    className="country-stat clickable"
+                    onClick={() => handleCountryClick(countryCode)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <span className="country-flag">{countryFlags[countryCode] || '🌍'}</span>
                     <span className="country-name">{countryNames[countryCode] || countryCode}</span>
                     <span className={`country-count ${index < 3 ? `top-${index + 1}` : ''}`}>
@@ -214,7 +271,12 @@ function GlobeSection() {
             {sortedAllTime.length > 0 ? (
               <>
                 {sortedAllTime.map(([countryCode, count], index) => (
-                  <div key={countryCode} className="country-stat all-time">
+                  <div 
+                    key={countryCode} 
+                    className="country-stat all-time clickable"
+                    onClick={() => handleCountryClick(countryCode)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <span className="country-flag">{countryFlags[countryCode] || '🌍'}</span>
                     <span className="country-name">{countryNames[countryCode] || countryCode}</span>
                     <span className={`country-count all-time ${index < 3 ? `top-${index + 1}` : ''}`}>
@@ -222,9 +284,9 @@ function GlobeSection() {
                     </span>
                   </div>
                 ))}
-                {Object.keys(persistentStats).length > 10 && (
+                {Object.keys(globalStats).length > 10 && (
                   <div className="more-countries-indicator">
-                    <span>+{Object.keys(persistentStats).length - 10} more countries</span>
+                    <span>+{Object.keys(globalStats).length - 10} more countries</span>
                   </div>
                 )}
               </>
