@@ -16,4 +16,8 @@ export type OutgoingMessage =
   | {
       type: "remove-marker";
       id: string;
+    }
+  | {
+      type: "global-stats";
+      stats: Record<string, number>;
     };
