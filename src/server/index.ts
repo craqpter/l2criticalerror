@@ -9,7 +9,7 @@ type ConnectionState = {
 };
 
 export class Globe extends Server {
-  onConnect(conn: Connection<ConnectionState>, ctx: ConnectionContext) {
+  async onConnect(conn: Connection<ConnectionState>, ctx: ConnectionContext) {
     // Whenever a fresh connection is made, we'll
     // send the entire state to the new connection
 
@@ -35,6 +35,14 @@ export class Globe extends Server {
       position,
     });
 
+    // Update persistent global stats
+    if (country) {
+      await this.updateGlobalStats(country);
+    }
+
+    // Get current global stats to send to client
+    const globalStats = await this.getGlobalStats();
+
     // Now, let's send the entire state to the new connection
     for (const connection of this.getConnections<ConnectionState>()) {
       try {
@@ -59,6 +67,24 @@ export class Globe extends Server {
         this.onCloseOrError(conn);
       }
     }
+
+    // Send global stats to the new connection
+    conn.send(
+      JSON.stringify({
+        type: "global-stats",
+        stats: globalStats,
+      } satisfies OutgoingMessage),
+    );
+  }
+
+  private async updateGlobalStats(country: string) {
+    const stats = await this.storage.get<Record<string, number>>("globalStats") || {};
+    stats[country] = (stats[country] || 0) + 1;
+    await this.storage.put("globalStats", stats);
+  }
+
+  private async getGlobalStats(): Promise<Record<string, number>> {
+    return await this.storage.get<Record<string, number>>("globalStats") || {};
   }
 
   // Whenever a connection closes (or errors), we'll broadcast a message to all
