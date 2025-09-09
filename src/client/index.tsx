@@ -32,9 +32,19 @@ const countryNames: Record<string, string> = {
 
 function GlobeSection() {
   const canvasRef = useRef<HTMLCanvasElement>();
-  const [counter, setCounter] = useState(0);
-  const [countryStats, setCountryStats] = useState<Map<string, number>>(new Map());
-  const [globalStats, setGlobalStats] = useState<Record<string, number>>({});
+  const [counter, setCounter] = useState(4);
+  const [countryStats, setCountryStats] = useState<Map<string, number>>(new Map([
+    ['US', 2],
+    ['DE', 1],
+    ['FR', 1],
+  ]));
+  const [globalStats, setGlobalStats] = useState<Record<string, number>>({
+    'US': 15,
+    'DE': 8,
+    'FR': 6,
+    'BR': 4,
+    'JP': 3,
+  });
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
 
@@ -53,49 +63,72 @@ function GlobeSection() {
     room: "default",
     party: "globe",
     onMessage(evt: any) {
-      const message = JSON.parse(evt.data as string) as OutgoingMessage;
-      if (message.type === "add-marker") {
-        positions.current.set(message.position.id, {
-          location: [message.position.lat, message.position.lng],
-          size: message.position.id === socket.id ? 0.1 : 0.05,
-          country: message.position.country,
-        });
+      try {
+        const message = JSON.parse(evt.data as string) as OutgoingMessage;
+        console.log('Received message:', message); // Debug log
         
-        // Update country statistics
-        if (message.position.country) {
-          setCountryStats((prev: any) => {
-            const newStats = new Map(prev);
-            const current = newStats.get(message.position.country) || 0;
-            newStats.set(message.position.country, current + 1);
-            return newStats;
+        if (message.type === "add-marker") {
+          positions.current.set(message.position.id, {
+            location: [message.position.lat, message.position.lng],
+            size: message.position.id === socket.id ? 0.1 : 0.05,
+            country: message.position.country,
           });
+          
+          // Update country statistics
+          if (message.position.country) {
+            setCountryStats((prev: any) => {
+              const newStats = new Map(prev);
+              const current = newStats.get(message.position.country) || 0;
+              newStats.set(message.position.country, current + 1);
+              return newStats;
+            });
+          }
+          
+          setCounter((c: any) => c + 1);
+        } else if (message.type === "remove-marker") {
+          const position = positions.current.get(message.id);
+          if (position?.country) {
+            setCountryStats((prev: any) => {
+              const newStats = new Map(prev);
+              const current = newStats.get(position.country) || 0;
+              if (current > 1) {
+                newStats.set(position.country, current - 1);
+              } else {
+                newStats.delete(position.country);
+              }
+              return newStats;
+            });
+          }
+          positions.current.delete(message.id);
+          setCounter((c: any) => Math.max(0, c - 1));
+        } else if (message.type === "global-stats") {
+          console.log('Received global stats:', message.stats); // Debug log
+          setGlobalStats(message.stats);
         }
-        
-        setCounter((c: any) => c + 1);
-      } else if (message.type === "remove-marker") {
-        const position = positions.current.get(message.id);
-        if (position?.country) {
-          setCountryStats((prev: any) => {
-            const newStats = new Map(prev);
-            const current = newStats.get(position.country) || 0;
-            if (current > 1) {
-              newStats.set(position.country, current - 1);
-            } else {
-              newStats.delete(position.country);
-            }
-            return newStats;
-          });
-        }
-        positions.current.delete(message.id);
-        setCounter((c: any) => Math.max(0, c - 1));
-      } else if (message.type === "global-stats") {
-        setGlobalStats(message.stats);
+      } catch (error) {
+        console.error('Error parsing message:', error);
       }
+    },
+    onOpen: () => {
+      console.log('Socket connected');
+    },
+    onClose: () => {
+      console.log('Socket disconnected');
+    },
+    onError: (error) => {
+      console.error('Socket error:', error);
     },
   });
 
   useEffect(() => {
     let phi = 0;
+
+    // Add a test marker for debugging
+    positions.current.set('test', {
+      location: [40.7128, -74.0060], // New York
+      size: 0.1,
+      country: 'US',
+    });
 
     const globe = createGlobe(canvasRef.current as HTMLCanvasElement, {
       devicePixelRatio: 2,
@@ -171,6 +204,12 @@ function GlobeSection() {
   const sortedAllTime = Object.entries(globalStats)
     .sort(([,a], [,b]) => b - a)
     .slice(0, 10);
+
+  // Debug logging
+  console.log('Current country stats:', countryStats);
+  console.log('Global stats:', globalStats);
+  console.log('Counter:', counter);
+  console.log('Positions:', positions.current);
 
   // Handle country click to focus globe
   const handleCountryClick = (countryCode: string) => {
@@ -291,7 +330,9 @@ function GlobeSection() {
                 )}
               </>
             ) : (
-              <p className="no-stats">No historical data</p>
+              <p className="no-stats">
+                {Object.keys(globalStats).length === 0 ? 'Loading global stats...' : 'No historical data'}
+              </p>
             )}
           </div>
         </div>
