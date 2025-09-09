@@ -2,8 +2,6 @@
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/yourusername/l2criticalerror)
 
-![Lineage 2 CriticalError C4 Preview](https://via.placeholder.com/800x400/1a1a1a/ffd700?text=Lineage+2+CriticalError+C4)
-
 A beautiful, real-time website for the **Lineage 2 CriticalError C4** private server featuring global player tracking, authentic L2 styling, and immersive user experience.
 
 ## 🌟 Features
