@@ -1,48 +1,195 @@
-# Multiplayer Globe App
+# ✨ Lineage 2 CriticalError C4 ✨
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/multiplayer-globe-template)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/yourusername/l2criticalerror)
 
-![Multiplayer Globe Template Preview](https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/43100bd9-8e11-4c20-cc00-3bec86253f00/public)
+![Lineage 2 CriticalError C4 Preview](https://via.placeholder.com/800x400/1a1a1a/ffd700?text=Lineage+2+CriticalError+C4)
 
-<!-- dash-content-start -->
+A beautiful, real-time website for the **Lineage 2 CriticalError C4** private server featuring global player tracking, authentic L2 styling, and immersive user experience.
 
-Using the power of [Durable Objects](https://developers.cloudflare.com/durable-objects/), this example shows website visitor locations in real-time. Anyone around the world visiting the [demo website](https://multiplayer-globe-template.templates.workers.dev) will be displayed as a dot on the globe! This template is powered by [PartyKit](https://www.partykit.io/).
+## 🌟 Features
 
-## How It Works
+### 🗺️ **Real-Time Global Player Tracking**
+- **Live Globe Visualization**: See players from around the world in real-time using an interactive 3D globe
+- **Country Statistics**: Track current session and all-time visitor counts by country
+- **Persistent Data**: Global statistics stored using Cloudflare Durable Objects
+- **Interactive Tooltips**: Hover over markers to see country details and player counts
 
-Each time someone visits the page, a WebSocket connection is opened with a Durable Object that manages the state of the globe. Visitors are placed on the globe based on the geographic location of their IP address, which is exposed as a [property on the initial HTTP request](https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties) that establishes the WebSocket connection.
+### 🎮 **Lineage 2 Themed Design**
+- **Authentic L2 Aesthetics**: Medieval fonts (Cinzel), gold/bronze color scheme, and fantasy UI elements
+- **Animated Effects**: Gold shimmer animations, glowing borders, and smooth transitions
+- **Responsive Design**: Optimized for desktop and mobile devices
+- **Background Music**: Immersive audio experience with toggle controls
 
-The Durable Object instance that manages the state of the globe runs in one location, and handles all incoming WebSocket connections. When a new connection is established, the Durable Object broadcasts the location of the new visitor to all other active visitors, and the client adds the new visitor to the globe visualization. When someone leaves the page and their connection is closed, the Durable Object similarly broadcasts their removal. The Durable Object instance remains active as long as there is at least one open connection. If all open connections are closed, the Durable Object instance is purged from memory and remains inactive until a new visitor lands on the page, opens a connection, and restarts the lifecycle.
+### 📊 **Server Information**
+- **Detailed Server Stats**: Complete information about rates, features, and gameplay systems
+- **Champion System**: Rare mobs with boosted drops
+- **NPC Buffer & Shop**: Multiple buff schemes for convenience
+- **Seven Signs & Sieges**: Classic castle wars and dungeon access
 
-## More on Durable Objects
+## 🚀 Technology Stack
 
-In this template, only one Durable Object instance is created, since all visitors should see updates from all other visitors, everywhere in the world. A more complex version of this application could instead show a map of the country the visitor is located in, and only display markers for other visitors who are located in the same country. In this case, a Durable Object instance would be created for each country, and the client would connect to and receive updates from the Durable Object instance corresponding to the visitor's country.
+- **Frontend**: React 18 + TypeScript
+- **Real-time**: PartyKit + WebSockets
+- **Backend**: Cloudflare Workers + Durable Objects
+- **Styling**: Custom CSS with L2-themed design
+- **3D Globe**: Cobe.js for interactive globe visualization
+- **Deployment**: Cloudflare Pages
 
-For this example, Durable Objects are used for synchronizing but not storing state. Since visitor connections are ephemeral, and tied to the in-memory lifespan of the Durable Object instance, there's no need to use persistent storage. However, a more complex version of this application could display the all-time visitor count, which needs to be persisted beyond the in-memory lifespan of the Durable Object. In this case, the Durable Object code would use the [Durable Object Storage API](https://developers.cloudflare.com/durable-objects/api/storage-api/) to persist the value of the counter.
+## 🛠️ How It Works
 
-<!-- dash-content-end -->
+### Real-Time Player Tracking
+1. **Connection**: When a player visits the website, a WebSocket connection is established
+2. **Geolocation**: Player's location is determined using Cloudflare's geolocation data
+3. **Visualization**: Player appears as a marker on the 3D globe
+4. **Statistics**: Country counts are updated in real-time and stored persistently
+5. **Broadcasting**: All connected players see live updates
 
-## Getting Started
+### Persistent Global Statistics
+- **Durable Object Storage**: Global visitor counts stored server-side
+- **Real-time Updates**: Statistics update instantly for all users
+- **Historical Data**: All-time visitor counts maintained across sessions
+- **Country Breakdown**: Detailed statistics by country with flags and names
 
-Outside of this repo, you can start a new project with this template using [C3](https://developers.cloudflare.com/pages/get-started/c3/) (the `create-cloudflare` CLI):
+## 🎯 Server Features
 
-```
-npm create cloudflare@latest -- --template=cloudflare/templates/multiplayer-globe-template
-```
+### 📈 **Server Rates**
+- **XP/SP**: x10
+- **Adena**: x5
+- **Drops/Spoil**: x5
+- **Quest Rewards**: x2
+- **Pet XP**: x15
 
-A live public deployment of this template is available at [https://multiplayer-globe-template.templates.workers.dev](https://multiplayer-globe-template.templates.workers.dev)
+### ⚔️ **Gameplay Systems**
+- **Champion System**: Rare, powerful mobs with boosted drops
+- **Class Master Support**: NPC-based class changes
+- **Seven Signs**: Fully working cycle with dungeon access
+- **Sieges**: Classic castle wars with balanced guard pricing
+- **Dual Boxing**: Multiple clients per IP allowed
+- **Offline Trade**: Allowed
 
-## Setup Steps
+## 🚀 Getting Started
 
-1. Install the project dependencies with a package manager of your choice:
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- Cloudflare account
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/l2criticalerror.git
+   cd l2criticalerror
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
-2. Deploy the project
+
+3. **Configure Cloudflare**
    ```bash
-   npx wrangler deploy
+   npx wrangler login
    ```
-3. And monitor your workers!
+
+4. **Deploy to Cloudflare**
    ```bash
-   npx wrangler tail
+   npm run deploy
    ```
+
+### Development
+
+```bash
+# Start development server
+npm run dev
+
+# Type checking
+npm run check
+
+# Deploy to production
+npm run deploy
+```
+
+## 📁 Project Structure
+
+```
+l2criticalerror/
+├── public/
+│   ├── index.html              # Main page
+│   ├── server-info.html        # Server information page
+│   ├── music/
+│   │   └── background.mp3      # Background music
+│   └── normalize.css           # CSS reset
+├── src/
+│   ├── client/
+│   │   ├── index.tsx           # React app
+│   │   └── styles.css          # L2-themed styles
+│   ├── server/
+│   │   └── index.ts            # Cloudflare Worker + Durable Object
+│   └── shared.ts               # Shared types
+├── package.json
+├── wrangler.json              # Cloudflare configuration
+└── tsconfig.json
+```
+
+## 🎨 Customization
+
+### Adding New Countries
+Update the country flags and names in `src/client/index.tsx`:
+
+```typescript
+const countryFlags: Record<string, string> = {
+  'US': '🇺🇸', 'CA': '🇨🇦', // Add more countries
+};
+
+const countryNames: Record<string, string> = {
+  'US': 'United States', 'CA': 'Canada', // Add more countries
+};
+```
+
+### Styling
+The L2 theme is defined in `src/client/styles.css` with:
+- **Color Variables**: Gold (#ffd700), Bronze (#b8860b)
+- **Fonts**: Cinzel (headings), Crimson Text (body)
+- **Effects**: Animations, glows, and transitions
+
+### Server Information
+Update server details in `public/server-info.html` and `src/client/index.tsx`.
+
+## 🌐 Live Demo
+
+- **Main Site**: [https://l2criticalerror.com](https://l2criticalerror.com)
+- **Server Info**: [https://l2criticalerror.com/server-info](https://l2criticalerror.com/server-info)
+
+## 📱 Social Links
+
+- **Telegram Channel**: [@l2CriticalError](https://t.me/l2CriticalError)
+- **Registration Bot**: [@lineage2c4bot](https://t.me/lineage2c4bot)
+- **Instagram**: [@l2criticalerror](https://instagram.com/l2criticalerror)
+- **Client Download**: [Google Drive](https://drive.google.com/file/d/14LLNAB8eAZ3B7WUywC3U4159OkV9WpzZ/view?usp=sharing)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Lineage 2**: The legendary MMORPG that inspired this project
+- **Cloudflare**: For the amazing Workers and Durable Objects platform
+- **PartyKit**: For real-time WebSocket functionality
+- **Cobe.js**: For the beautiful 3D globe visualization
+- **Inspired by**: Arax, Starnet, Moscow, L2Firebird, L2Reworld servers
+
+---
+
+**✨ Experience the legendary Lineage 2 C4 chronicle with authentic old-school gameplay! ✨**
+
+*Join thousands of players worldwide in the ultimate Lineage 2 CriticalError C4 experience.*
