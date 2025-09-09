@@ -391,7 +391,7 @@ function App() {
 
       <header>
         <h1>✨ Lineage 2 CriticalError C4 ✨</h1>
-        <p>Old-School C4 Private Server</p>
+        <p>Old-School C4 Private Server - Test Period</p>
       </header>
 
       <section className="rates">
