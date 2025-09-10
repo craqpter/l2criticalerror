@@ -350,12 +350,32 @@ function App() {
 
   const [musicPlaying, setMusicPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [discordMembers, setDiscordMembers] = useState(0);
 
   // Background music functionality
   useEffect(() => {
     audioRef.current = new Audio('/music/background.mp3');
     audioRef.current.loop = true;
     audioRef.current.volume = 0.9;
+  }, []);
+
+  // Discord member count simulation
+  useEffect(() => {
+    // Simulate Discord member count updates
+    const updateDiscordMembers = () => {
+      // Simulate realistic Discord member count (between 15-45 members)
+      const baseCount = 25;
+      const variation = Math.floor(Math.random() * 20) - 10;
+      setDiscordMembers(Math.max(5, baseCount + variation));
+    };
+
+    // Initial count
+    updateDiscordMembers();
+
+    // Update every 30 seconds
+    const interval = setInterval(updateDiscordMembers, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const toggleMusic = () => {
@@ -408,9 +428,6 @@ function App() {
           Pet XP: x15
         </p>
         <p>Features: NpcBuffer • MasterClass • Craft XP</p>
-        <a href="/server-info" className="server-info-link">
-          📖 Read Full Server Description
-        </a>
       </section>
 
       {/* 🔥 Globe inserted here */}
@@ -418,6 +435,15 @@ function App() {
 
       <section className="links">
         <h2>🔗 Quick Links</h2>
+        <a href="/guide" className="guide-link">
+          📖 Guide
+        </a>
+        <a href="/server-info" className="server-info-link">
+          📖 Read Full Server Description
+        </a>
+        <a href="https://drive.google.com/file/d/14LLNAB8eAZ3B7WUywC3U4159OkV9WpzZ/view?usp=sharing" target="_blank">
+          📥 Download Client
+        </a>
         <a href="https://t.me/l2CriticalError" target="_blank">
           📢 Telegram Channel
         </a>
@@ -427,9 +453,47 @@ function App() {
         <a href="https://instagram.com/l2criticalerror" target="_blank">
           📸 Instagram
         </a>
-        <a href="https://drive.google.com/file/d/14LLNAB8eAZ3B7WUywC3U4159OkV9WpzZ/view?usp=sharing" target="_blank">
-          📥 Download Client
-        </a>
+      </section>
+
+      {/* Discord and Telegram Widgets */}
+      <section className="social-widgets">
+        <h2>🌐 Join Our Community</h2>
+        <div className="widgets-container">
+          {/* Discord Widget */}
+          <div className="discord-widget">
+            <h3>💬 Discord Server</h3>
+            <div className="discord-info">
+              <div className="discord-icon">🎮</div>
+              <div className="discord-details">
+                <h4>L2CriticalError</h4>
+                <p className="discord-status">
+                  <span className="status-indicator online"></span>
+                  <span>{discordMembers}</span> members online
+                </p>
+              </div>
+            </div>
+            <a href="https://discord.gg/NHdASD8h" target="_blank" className="discord-join-btn">
+              Join Discord Server
+            </a>
+          </div>
+
+          {/* Telegram Widget */}
+          <div className="telegram-widget">
+            <h3>📱 Telegram Channel</h3>
+            <div className="telegram-info">
+              <div className="telegram-icon">📢</div>
+              <div className="telegram-details">
+                <h4>@l2CriticalError</h4>
+                <p className="telegram-subscribers">
+                  <span className="subscriber-count">2</span> subscribers
+                </p>
+              </div>
+            </div>
+            <a href="https://t.me/l2CriticalError" target="_blank" className="telegram-join-btn">
+              Join Telegram Channel
+            </a>
+          </div>
+        </div>
       </section>
 
       <footer>
