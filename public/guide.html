@@ -1,1 +1,499 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Game Guide - Lineage 2 CriticalError C4</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Game Guide - Lineage 2 CriticalError C4" />
+    <meta name="description" content="Complete guide for downloading, installing, and playing Lineage 2 CriticalError C4 private server." />
+    <meta name="author" content="Lineage 2 CriticalError" />
+    <!-- Theme Colour -->
+    <meta name="theme-color" content="#000000" />
+
+    <link rel="stylesheet" href="/normalize.css" />
+    <link rel="stylesheet" href="/dist/index.css" />
+    <style>
+      body {
+        font-family: 'Crimson Text', serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #d4af37;
+        background: 
+          linear-gradient(135deg, rgba(10, 10, 10, 0.8) 0%, rgba(26, 26, 26, 0.8) 25%, rgba(15, 15, 15, 0.8) 50%, rgba(26, 26, 26, 0.8) 75%, rgba(10, 10, 10, 0.8) 100%),
+          url('/6.gif');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        text-align: center;
+        padding-top: 40px;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+          radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(255, 119, 48, 0.15) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.08) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Cinzel', serif;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        letter-spacing: 1px;
+      }
+
+      h1 {
+        color: #ffd700;
+        font-size: 2.5rem;
+        background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: goldShimmer 3s ease-in-out infinite;
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      }
+
+      @keyframes goldShimmer {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-bottom: 2rem;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #8b4513 100%);
+        color: #ffd700;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid #b8860b;
+        font-family: 'Cinzel', serif;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        box-shadow: 
+          0 4px 15px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+
+      .back-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+          0 8px 25px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1),
+          0 0 20px rgba(255, 215, 0, 0.3);
+        text-decoration: none;
+        color: #ffff00;
+        border-color: #ffd700;
+      }
+
+      .guide-section {
+        background: linear-gradient(135deg, 
+          rgba(26, 26, 26, 0.95) 0%, 
+          rgba(42, 42, 42, 0.95) 50%, 
+          rgba(26, 26, 26, 0.95) 100%);
+        border: 2px solid #b8860b;
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 2rem 0;
+        box-shadow: 
+          0 8px 32px rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1),
+          0 0 20px rgba(184, 134, 11, 0.2);
+        backdrop-filter: blur(10px);
+        position: relative;
+        text-align: left;
+      }
+
+      .guide-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, 
+          rgba(255, 215, 0, 0.05) 0%, 
+          transparent 25%, 
+          transparent 75%, 
+          rgba(255, 215, 0, 0.05) 100%);
+        border-radius: 10px;
+        pointer-events: none;
+      }
+
+      .guide-section h2 {
+        color: #ffd700;
+        font-family: 'Cinzel', serif;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        margin-bottom: 1.5rem;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .guide-section p {
+        color: #d4af37;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 1rem;
+      }
+
+      .step-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+      }
+
+      .step-list li {
+        padding: 1rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .step-list li:last-child {
+        border-bottom: none;
+      }
+
+      .step-number {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+      }
+
+      .step-content {
+        flex: 1;
+      }
+
+      .step-content h4 {
+        color: #ffd700;
+        font-family: 'Cinzel', serif;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+      }
+
+      .step-content p {
+        color: #d4af37;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+      }
+
+      .download-link {
+        display: inline-block;
+        margin: 1rem 0;
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #8b4513 100%);
+        color: #ffd700;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid #b8860b;
+        font-family: 'Cinzel', serif;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        box-shadow: 
+          0 4px 15px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 1;
+      }
+
+      .download-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+          0 8px 25px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1),
+          0 0 20px rgba(255, 215, 0, 0.3);
+        text-decoration: none;
+        color: #ffff00;
+        border-color: #ffd700;
+      }
+
+      .warning-box {
+        background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 152, 0, 0.2) 100%);
+        border: 2px solid rgba(255, 193, 7, 0.5);
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        position: relative;
+        z-index: 1;
+      }
+
+      .warning-box h4 {
+        color: #ffc107;
+        font-family: 'Cinzel', serif;
+        margin-bottom: 0.5rem;
+      }
+
+      .warning-box p {
+        color: #d4af37;
+        margin-bottom: 0;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0;
+        position: relative;
+        z-index: 1;
+      }
+
+      .info-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+
+      .info-card:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .info-card h4 {
+        color: #ffd700;
+        font-family: 'Cinzel', serif;
+        margin-bottom: 0.5rem;
+      }
+
+      .info-card p {
+        color: #d4af37;
+        font-size: 0.9rem;
+        margin-bottom: 0;
+      }
+
+      @media (max-width: 768px) {
+        .info-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .guide-section {
+          padding: 1.5rem;
+        }
+
+        .step-list li {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .step-number {
+          align-self: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>📖 Game Guide</h1>
+        <p>Complete setup guide for Lineage 2 CriticalError C4</p>
+      </header>
+
+      <a href="/" class="back-link">← Back to Main Page</a>
+
+      <div class="guide-section">
+        <h2>📥 Download & Installation</h2>
+        <p>Follow these steps to download and set up the Lineage 2 CriticalError C4 client:</p>
+        
+        <ol class="step-list">
+          <li>
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>Download the Client</h4>
+              <p>Click the download button below to get the Lineage 2 CriticalError C4 client package.</p>
+              <a href="https://drive.google.com/file/d/14LLNAB8eAZ3B7WUywC3U4159OkV9WpzZ/view?usp=sharing" target="_blank" class="download-link">
+                📥 Download Client
+              </a>
+            </div>
+          </li>
+          
+          <li>
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>Extract the Files</h4>
+              <p>Unzip the downloaded file to a folder on your computer. Make sure you have enough disk space (approximately 2-3 GB).</p>
+            </div>
+          </li>
+          
+          <li>
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>Run the Game</h4>
+              <p>Navigate to the extracted folder and run <strong>L2.exe</strong> from the system folder. This is the main game executable.</p>
+            </div>
+          </li>
+          
+          <li>
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h4>Create Account</h4>
+              <p>Use our Telegram bot to create your game account: <a href="https://t.me/lineage2c4bot" target="_blank" style="color: #ffd700;">@lineage2c4bot</a></p>
+            </div>
+          </li>
+        </ol>
+
+        <div class="warning-box">
+          <h4>⚠️ Important Notes</h4>
+          <p>Make sure to run L2.exe as administrator if you encounter any permission issues. The game requires Windows operating system.</p>
+        </div>
+      </div>
+
+      <div class="guide-section">
+        <h2>🎮 Getting Started</h2>
+        <p>Once you have the client installed and your account created, here's how to begin your adventure:</p>
+        
+        <div class="info-grid">
+          <div class="info-card">
+            <h4>🏃‍♂️ Character Creation</h4>
+            <p>Choose your race and class carefully. Each has unique abilities and playstyles.</p>
+          </div>
+          
+          <div class="info-card">
+            <h4>⚔️ Combat System</h4>
+            <p>Learn the combat mechanics and skill combinations for your chosen class.</p>
+          </div>
+          
+          <div class="info-card">
+            <h4>💰 Economy</h4>
+            <p>Understand the server rates: x10 XP/SP, x5 Adena, x5 Drops for optimal progression.</p>
+          </div>
+          
+          <div class="info-card">
+            <h4>👥 Community</h4>
+            <p>Join our Discord and Telegram channels to connect with other players.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-section">
+        <h2>🔧 Server Features</h2>
+        <p>Our server includes several quality-of-life improvements:</p>
+        
+        <ul class="step-list">
+          <li>
+            <div class="step-number">✨</div>
+            <div class="step-content">
+              <h4>NPC Buffer</h4>
+              <p>Get buffs from NPCs to enhance your character's abilities.</p>
+            </div>
+          </li>
+          
+          <li>
+            <div class="step-number">🎓</div>
+            <div class="step-content">
+              <h4>Master Class System</h4>
+              <p>NPC-based class changes with flexible progression paths.</p>
+            </div>
+          </li>
+          
+          <li>
+            <div class="step-number">👑</div>
+            <div class="step-content">
+              <h4>Noblesse & Subclasses</h4>
+              <p>Complete the Baium quest to unlock advanced character progression.</p>
+            </div>
+          </li>
+          
+          <li>
+            <div class="step-number">🏰</div>
+            <div class="step-content">
+              <h4>Seven Signs & Sieges</h4>
+              <p>Participate in epic castle wars and faction battles.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h2>🌐 Community Links</h2>
+        <p>Stay connected with the community:</p>
+        
+        <div class="info-grid">
+          <div class="info-card">
+            <h4>💬 Discord</h4>
+            <p>Join our Discord server for real-time chat and support.</p>
+            <a href="https://discord.gg/NHdASD8h" target="_blank" style="color: #ffd700;">Join Discord</a>
+          </div>
+          
+          <div class="info-card">
+            <h4>📱 Telegram</h4>
+            <p>Follow our Telegram channel for updates and announcements.</p>
+            <a href="https://t.me/l2CriticalError" target="_blank" style="color: #ffd700;">Join Telegram</a>
+          </div>
+          
+          <div class="info-card">
+            <h4>📸 Instagram</h4>
+            <p>Follow us on Instagram for screenshots and community highlights.</p>
+            <a href="https://instagram.com/l2criticalerror" target="_blank" style="color: #ffd700;">Follow Instagram</a>
+          </div>
+          
+          <div class="info-card">
+            <h4>🤖 Registration Bot</h4>
+            <p>Use our Telegram bot to create and manage your game account.</p>
+            <a href="https://t.me/lineage2c4bot" target="_blank" style="color: #ffd700;">Open Bot</a>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>
+          Inspired by legendary Lineage 2 servers — Arax, Starnet, Moscow,
+          L2Firebird, L2Reworld
+        </p>
+        <p>&copy; 2025 Lineage 2 CriticalError</p>
+      </footer>
+    </div>
+  </body>
+</html>
 
