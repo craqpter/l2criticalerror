@@ -512,8 +512,9 @@ a:hover {
   padding: 1rem;
 }
 
-/* Server Info Link */
-.server-info-link {
+/* Server Info Link and Guide Link */
+.server-info-link,
+.guide-link {
   display: inline-block;
   margin-top: 1rem;
   padding: 0.75rem 1.5rem;
@@ -535,7 +536,8 @@ a:hover {
   overflow: hidden;
 }
 
-.server-info-link::before {
+.server-info-link::before,
+.guide-link::before {
   content: '';
   position: absolute;
   top: 0;
@@ -549,11 +551,13 @@ a:hover {
   transition: left 0.5s ease;
 }
 
-.server-info-link:hover::before {
+.server-info-link:hover::before,
+.guide-link:hover::before {
   left: 100%;
 }
 
-.server-info-link:hover {
+.server-info-link:hover,
+.guide-link:hover {
   transform: translateY(-2px);
   box-shadow: 
     0 8px 25px rgba(0, 0, 0, 0.4),
@@ -687,6 +691,205 @@ a:hover {
   border-color: #ffd700;
 }
 
+/* Social Widgets Section */
+.social-widgets {
+  background: linear-gradient(135deg, 
+    rgba(26, 26, 26, 0.8) 0%, 
+    rgba(42, 42, 42, 0.8) 100%);
+  border: 2px solid #b8860b;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 1000px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(184, 134, 11, 0.2);
+  position: relative;
+}
+
+.social-widgets::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    rgba(255, 215, 0, 0.05) 0%, 
+    transparent 25%, 
+    transparent 75%, 
+    rgba(255, 215, 0, 0.05) 100%);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.social-widgets h2 {
+  color: #ffd700;
+  font-family: 'Cinzel', serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.widgets-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.discord-widget,
+.telegram-widget {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.05) 0%, 
+    rgba(255, 255, 255, 0.02) 100%);
+  border: 2px solid rgba(184, 134, 11, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.discord-widget::before,
+.telegram-widget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 215, 0, 0.1) 50%, 
+    transparent 100%);
+  transition: left 0.5s ease;
+}
+
+.discord-widget:hover::before,
+.telegram-widget:hover::before {
+  left: 100%;
+}
+
+.discord-widget:hover,
+.telegram-widget:hover {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 215, 0, 0.05) 100%);
+  transform: translateY(-5px);
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.discord-widget h3,
+.telegram-widget h3 {
+  color: #ffd700;
+  font-family: 'Cinzel', serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  margin-bottom: 1rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.discord-info,
+.telegram-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.discord-icon,
+.telegram-icon {
+  font-size: 2rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.discord-details,
+.telegram-details {
+  flex: 1;
+}
+
+.discord-details h4,
+.telegram-details h4 {
+  color: #ffd700;
+  font-family: 'Cinzel', serif;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.discord-status,
+.telegram-subscribers {
+  color: #ccc;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.status-indicator.online {
+  background: #4caf50;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+  animation: pulse 2s infinite;
+}
+
+.subscriber-count {
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.discord-join-btn,
+.telegram-join-btn {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #8b4513 100%);
+  color: #ffd700;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 2px solid #b8860b;
+  font-family: 'Cinzel', serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.discord-join-btn:hover,
+.telegram-join-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(255, 215, 0, 0.3);
+  color: #ffff00;
+  border-color: #ffd700;
+  text-decoration: none;
+}
+
 footer {
   margin-top: 3rem;
   padding: 2rem;
@@ -744,6 +947,30 @@ footer p {
   .music-control {
     position: static;
     margin-bottom: 1rem;
+  }
+
+  .widgets-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .discord-widget,
+  .telegram-widget {
+    padding: 1rem;
+  }
+
+  .discord-info,
+  .telegram-info {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .discord-icon,
+  .telegram-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
   }
 }
 
