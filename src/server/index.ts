@@ -154,6 +154,20 @@ export default {
       }
     }
     
+    // Handle guide page route
+    if (url.pathname === "/guide") {
+      try {
+        // For now, return a simple response - you can implement proper asset serving later
+        return new Response("Guide page - implement asset serving", {
+          headers: {
+            "Content-Type": "text/html;charset=utf-8",
+          },
+        });
+      } catch (error) {
+        console.error("Error serving guide.html:", error);
+      }
+    }
+    
     return (
       (await routePartykitRequest(request, { ...env })) ||
       new Response("Not Found", { status: 404 })
