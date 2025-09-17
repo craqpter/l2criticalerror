@@ -351,6 +351,7 @@ function App() {
   const [musicPlaying, setMusicPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [discordMembers, setDiscordMembers] = useState(0);
+  const [showPatchOverlay, setShowPatchOverlay] = useState(false);
 
   // Background music functionality
   useEffect(() => {
@@ -390,6 +391,23 @@ function App() {
         setMusicPlaying(true);
       }
     }
+  };
+
+  const handlePatchDownload = () => {
+    // Create a temporary link element to trigger download
+    const link = document.createElement('a');
+    link.href = '/patches/system.7z';
+    link.download = 'system.7z';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Show overlay with instructions
+    setShowPatchOverlay(true);
+  };
+
+  const closePatchOverlay = () => {
+    setShowPatchOverlay(false);
   };
 
   return (
@@ -432,6 +450,13 @@ function App() {
 
       {/* 🔥 Globe inserted here */}
       <GlobeSection />
+
+      {/* Latest Patch Release Button */}
+      <section className="patch-section">
+        <button className="patch-download-btn" onClick={handlePatchDownload}>
+          🔄 Latest Patch Release
+        </button>
+      </section>
 
       <section className="links">
         <h2>🔗 Quick Links</h2>
@@ -503,6 +528,55 @@ function App() {
         </p>
         <p>&copy; 2025 Lineage 2 CriticalError</p>
       </footer>
+
+      {/* Patch Download Overlay */}
+      {showPatchOverlay && (
+        <div className="patch-overlay">
+          <div className="patch-overlay-content">
+            <div className="patch-overlay-header">
+              <h3>📦 Patch Download Instructions</h3>
+              <button className="close-overlay-btn" onClick={closePatchOverlay}>
+                ✕
+              </button>
+            </div>
+            <div className="patch-instructions">
+              <div className="instruction-step">
+                <div className="step-number">1</div>
+                <div className="step-content">
+                  <h4>📥 Download Complete</h4>
+                  <p>The patch file <strong>system.7z</strong> has been downloaded to your computer.</p>
+                </div>
+              </div>
+              <div className="instruction-step">
+                <div className="step-number">2</div>
+                <div className="step-content">
+                  <h4>📂 Extract the Archive</h4>
+                  <p>Use 7-Zip, WinRAR, or any archive extractor to unzip the <strong>system.7z</strong> file.</p>
+                </div>
+              </div>
+              <div className="instruction-step">
+                <div className="step-number">3</div>
+                <div className="step-content">
+                  <h4>🎯 Install the Patch</h4>
+                  <p>Copy the extracted <strong>system</strong> folder and drop it into your Lineage 2 client directory, replacing the existing system folder.</p>
+                </div>
+              </div>
+              <div className="instruction-step">
+                <div className="step-number">4</div>
+                <div className="step-content">
+                  <h4>✅ Restart Client</h4>
+                  <p>Close your Lineage 2 client completely and restart it to apply the patch.</p>
+                </div>
+              </div>
+            </div>
+            <div className="patch-overlay-footer">
+              <button className="got-it-btn" onClick={closePatchOverlay}>
+                Got it! 👍
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
