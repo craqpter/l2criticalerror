@@ -497,7 +497,7 @@ function App() {
                 </p>
               </div>
             </div>
-            <a href="https://discord.gg/NHdASD8h" target="_blank" className="discord-join-btn">
+            <a href="https://discord.gg/Gdn4QNz2VK" target="_blank" className="discord-join-btn">
               Join Discord Server
             </a>
           </div>
