@@ -466,7 +466,7 @@ function App() {
         <a href="/server-info" className="server-info-link">
           📖 Read Full Server Description
         </a>
-        <a href="https://drive.google.com/file/d/14LLNAB8eAZ3B7WUywC3U4159OkV9WpzZ/view?usp=sharing" target="_blank">
+        <a href="https://drive.google.com/file/d/13Fm0M30JIC8GxYvw3iCrmzT0dbjdNKce/view?usp=sharing" target="_blank">
           📥 Download Client
         </a>
         <a href="https://t.me/l2CriticalError" target="_blank">
