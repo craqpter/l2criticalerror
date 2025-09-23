@@ -347,19 +347,16 @@ function App() {
   // Countdown timer functionality
   useEffect(() => {
     const calculateTimeLeft = () => {
-      // Get tomorrow at 20:00 in Chisinau timezone (Europe/Chisinau)
+      // HARDCODED SERVER OPENING DATE: Tomorrow at 20:00 Chisinau time (UTC+2)
+      // This date is fixed and will not change regardless of browser time
+      const serverOpeningDate = new Date('2025-01-24T18:00:00.000Z'); // 20:00 Chisinau = 18:00 UTC
+      
       const now = new Date();
-      const tomorrow = new Date(now);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(20, 0, 0, 0);
       
-      // Convert to Chisinau timezone (UTC+2 in winter, UTC+3 in summer)
-      // For simplicity, we'll use UTC+2 (winter time)
-      const chisinauTime = new Date(tomorrow.getTime() - (2 * 60 * 60 * 1000));
-      
-      const difference = chisinauTime.getTime() - now.getTime();
+      const difference = serverOpeningDate.getTime() - now.getTime();
       
       if (difference > 0) {
+        // Countdown to server opening
         const days = Math.floor(difference / (1000 * 60 * 60 * 24));
         const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
@@ -368,9 +365,11 @@ function App() {
         setTimeLeft({ days, hours, minutes, seconds });
         setServerOpened(false);
       } else {
+        // Server is open - show uptime
         setServerOpened(true);
+        
         // Calculate server uptime (time since opening)
-        const uptimeDifference = now.getTime() - chisinauTime.getTime();
+        const uptimeDifference = now.getTime() - serverOpeningDate.getTime();
         const uptimeDays = Math.floor(uptimeDifference / (1000 * 60 * 60 * 24));
         const uptimeHours = Math.floor((uptimeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const uptimeMinutes = Math.floor((uptimeDifference % (1000 * 60 * 60)) / (1000 * 60));
