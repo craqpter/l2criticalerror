@@ -76,7 +76,7 @@ function GlobeSection() {
           
           // Update country statistics
           if (message.position.country) {
-            setCountryStats((prev: any) => {
+            setCountryStats((prev: Map<string, number>) => {
               const newStats = new Map(prev);
               const current = newStats.get(message.position.country) || 0;
               newStats.set(message.position.country, current + 1);
@@ -84,23 +84,23 @@ function GlobeSection() {
             });
           }
           
-          setCounter((c: any) => c + 1);
+          setCounter((c: number) => c + 1);
         } else if (message.type === "remove-marker") {
           const position = positions.current.get(message.id);
           if (position?.country) {
-            setCountryStats((prev: any) => {
+            setCountryStats((prev: Map<string, number>) => {
               const newStats = new Map(prev);
-              const current = newStats.get(position.country) || 0;
+              const current = newStats.get(position.country!) || 0;
               if (current > 1) {
-                newStats.set(position.country, current - 1);
+                newStats.set(position.country!, current - 1);
               } else {
-                newStats.delete(position.country);
+                newStats.delete(position.country!);
               }
               return newStats;
             });
           }
           positions.current.delete(message.id);
-          setCounter((c: any) => Math.max(0, c - 1));
+          setCounter((c: number) => Math.max(0, c - 1));
         } else if (message.type === "global-stats") {
           console.log('Received global stats:', message.stats); // Debug log
           setGlobalStats(message.stats);
@@ -149,44 +149,6 @@ function GlobeSection() {
         state.markers = [...positions.current.values()];
         state.phi = phi;
         phi += 0.01;
-      },
-      onMouseMove: (coords) => {
-        // Find the closest marker to the mouse position
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        
-        const rect = canvas.getBoundingClientRect();
-        const x = coords.x * rect.width;
-        const y = coords.y * rect.height;
-        
-        let closestMarker = null;
-        let closestDistance = Infinity;
-        
-        for (const [id, marker] of positions.current) {
-          if (!marker.country) continue;
-          
-          // Convert lat/lng to screen coordinates (simplified)
-          const markerX = (marker.location[1] + 180) / 360 * rect.width;
-          const markerY = (90 - marker.location[0]) / 180 * rect.height;
-          
-          const distance = Math.sqrt((x - markerX) ** 2 + (y - markerY) ** 2);
-          if (distance < 30 && distance < closestDistance) {
-            closestDistance = distance;
-            closestMarker = marker;
-          }
-        }
-        
-        if (closestMarker && closestMarker.country) {
-          setHoveredCountry(closestMarker.country);
-          setTooltipPosition({ x: x + rect.left, y: y + rect.top });
-        } else {
-          setHoveredCountry(null);
-          setTooltipPosition(null);
-        }
-      },
-      onMouseLeave: () => {
-        setHoveredCountry(null);
-        setTooltipPosition(null);
       },
     });
 
@@ -352,6 +314,9 @@ function App() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [discordMembers, setDiscordMembers] = useState(0);
   const [showPatchOverlay, setShowPatchOverlay] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [serverOpened, setServerOpened] = useState(false);
+  const [serverUptime, setServerUptime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   // Background music functionality
   useEffect(() => {
@@ -375,6 +340,51 @@ function App() {
 
     // Update every 30 seconds
     const interval = setInterval(updateDiscordMembers, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Countdown timer functionality
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      // Get tomorrow at 20:00 in Chisinau timezone (Europe/Chisinau)
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(20, 0, 0, 0);
+      
+      // Convert to Chisinau timezone (UTC+2 in winter, UTC+3 in summer)
+      // For simplicity, we'll use UTC+2 (winter time)
+      const chisinauTime = new Date(tomorrow.getTime() - (2 * 60 * 60 * 1000));
+      
+      const difference = chisinauTime.getTime() - now.getTime();
+      
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+        
+        setTimeLeft({ days, hours, minutes, seconds });
+        setServerOpened(false);
+      } else {
+        setServerOpened(true);
+        // Calculate server uptime (time since opening)
+        const uptimeDifference = now.getTime() - chisinauTime.getTime();
+        const uptimeDays = Math.floor(uptimeDifference / (1000 * 60 * 60 * 24));
+        const uptimeHours = Math.floor((uptimeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const uptimeMinutes = Math.floor((uptimeDifference % (1000 * 60 * 60)) / (1000 * 60));
+        const uptimeSeconds = Math.floor((uptimeDifference % (1000 * 60)) / 1000);
+        
+        setServerUptime({ days: uptimeDays, hours: uptimeHours, minutes: uptimeMinutes, seconds: uptimeSeconds });
+      }
+    };
+
+    // Initial calculation
+    calculateTimeLeft();
+
+    // Update every second
+    const interval = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(interval);
   }, []);
@@ -429,8 +439,55 @@ function App() {
 
       <header>
         <h1>✨ Lineage 2 CriticalError C4 ✨</h1>
-        <p>Old-School C4 Private Server - Test Period</p>
+        <p>Old-School C4 Private Server</p>
       </header>
+
+      {/* Countdown Timer Section */}
+      <section className="countdown-section">
+        <h2>🚀 Server Opening</h2>
+        {!serverOpened ? (
+          <div className="countdown-timer">
+            <div className="countdown-item">
+              <span className="countdown-number">{timeLeft.days}</span>
+              <span className="countdown-label">Days</span>
+            </div>
+            <div className="countdown-item">
+              <span className="countdown-number">{timeLeft.hours}</span>
+              <span className="countdown-label">Hours</span>
+            </div>
+            <div className="countdown-item">
+              <span className="countdown-number">{timeLeft.minutes}</span>
+              <span className="countdown-label">Minutes</span>
+            </div>
+            <div className="countdown-item">
+              <span className="countdown-number">{timeLeft.seconds}</span>
+              <span className="countdown-label">Seconds</span>
+            </div>
+          </div>
+        ) : (
+          <div className="server-uptime">
+            <h3>✨ Lineage 2 CriticalError C4 ✨ Server works</h3>
+            <div className="uptime-timer">
+              <div className="uptime-item">
+                <span className="uptime-number">{serverUptime.days}</span>
+                <span className="uptime-label">Days</span>
+              </div>
+              <div className="uptime-item">
+                <span className="uptime-number">{serverUptime.hours}</span>
+                <span className="uptime-label">Hours</span>
+              </div>
+              <div className="uptime-item">
+                <span className="uptime-number">{serverUptime.minutes}</span>
+                <span className="uptime-label">Minutes</span>
+              </div>
+              <div className="uptime-item">
+                <span className="uptime-number">{serverUptime.seconds}</span>
+                <span className="uptime-label">Seconds</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
 
       <section className="rates">
         <h2>📊 Server Rates</h2>
@@ -446,6 +503,7 @@ function App() {
           Pet XP: x15
         </p>
         <p>Features: NpcBuffer • MasterClass • Craft XP</p>
+        <p><strong>Noblesse and Subclasses:</strong> No quest needed</p>
       </section>
 
       {/* 🔥 Globe inserted here */}
@@ -474,9 +532,6 @@ function App() {
         </a>
         <a href="https://t.me/lineage2c4bot" target="_blank">
           🤖 Registration Bot
-        </a>
-        <a href="https://instagram.com/l2criticalerror" target="_blank">
-          📸 Instagram
         </a>
       </section>
 
@@ -518,6 +573,21 @@ function App() {
               Join Telegram Channel
             </a>
           </div>
+        </div>
+      </section>
+
+      {/* Server Button Section */}
+      <section className="server-button-section">
+        <h2>🔗 Share Our Server</h2>
+        <div className="server-button-container">
+          <a href="https://l2-servera.com" target="_blank" rel="noopener noreferrer">
+            <img 
+              src="https://l2-servera.com/wp-content/themes/servers/assets/images/button/black.gif" 
+              alt="Black theme" 
+              title="Black theme"
+              className="server-button"
+            />
+          </a>
         </div>
       </section>
 
