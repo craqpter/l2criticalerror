@@ -163,7 +163,6 @@ Update server details in `public/server-info.html` and `src/client/index.tsx`.
 
 - **Telegram Channel**: [@l2CriticalError](https://t.me/l2CriticalError)
 - **Registration Bot**: [@lineage2c4bot](https://t.me/lineage2c4bot)
-- **Instagram**: [@l2criticalerror](https://instagram.com/l2criticalerror)
 - **Client Download**: [Google Drive](https://drive.google.com/file/d/13Fm0M30JIC8GxYvw3iCrmzT0dbjdNKce/view?usp=sharing)
 
 ## 🤝 Contributing
