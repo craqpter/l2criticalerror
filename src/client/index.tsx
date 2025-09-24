@@ -349,7 +349,7 @@ function App() {
     const calculateTimeLeft = () => {
       // HARDCODED SERVER OPENING DATE: Tomorrow at 20:00 Chisinau time (UTC+2)
       // This date is fixed and will not change regardless of browser time
-      const serverOpeningDate = new Date('2025-09-24T18:00:00.000Z'); // 20:00 Chisinau = 18:00 UTC
+      const serverOpeningDate = new Date('2025-09-24T17:00:00.000Z'); // 20:00 Chisinau = 18:00 UTC
       
       const now = new Date();
       
