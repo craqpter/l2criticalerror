@@ -49,37 +49,41 @@ export class Globe extends Server {
       await this.updateGlobalStats(countryCode);
     }
 
-    // Send existing markers to the new connection
-    for (const connection of this.connections.values()) {
-      try {
-        // Send existing markers to the new connection
-        if (connection.id !== conn.id) {
-          conn.send(
-            JSON.stringify({
-              type: "add-marker",
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              position: connection.state!.position,
-            } satisfies OutgoingMessage),
-          );
+    // Send the new connection's position to all other connections
+    // Note: We'll send existing markers to the new connection in a separate step
+    this.broadcastToOthers(conn, {
+      type: "add-marker",
+      position,
+    });
+  }
+
+  private broadcastToOthers(excludeConnection: Connection, message: OutgoingMessage) {
+    const messageStr = JSON.stringify(message);
+    
+    for (const connection of this.connections) {
+      if (connection.id !== excludeConnection.id) {
+        try {
+          connection.send(messageStr);
+        } catch (error) {
+          console.error(`Error sending message to ${connection.id}:`, error);
         }
-      } catch (error) {
-        console.error(`Error sending to connection ${connection.id}:`, error);
-        this.onCloseOrError(connection);
       }
     }
+  }
 
-    // Send the new connection's position to all other connections
-    for (const connection of this.connections.values()) {
-      if (connection.id !== conn.id) {
+  private async sendExistingMarkersToNewConnection(newConnection: Connection) {
+    // Send existing markers to the new connection
+    for (const connection of this.connections) {
+      if (connection.id !== newConnection.id && connection.state?.position) {
         try {
-          connection.send(
+          newConnection.send(
             JSON.stringify({
               type: "add-marker",
-              position,
+              position: connection.state.position,
             } satisfies OutgoingMessage),
           );
         } catch (error) {
-          console.error(`Error sending new marker to ${connection.id}:`, error);
+          console.error(`Error sending existing marker to new connection:`, error);
         }
       }
     }
@@ -120,20 +124,10 @@ export class Globe extends Server {
   // Whenever a connection closes (or errors), we'll broadcast a message to all
   // other connections to remove the marker.
   onCloseOrError(connection: Connection) {
-    const message = JSON.stringify({
+    this.broadcastToOthers(connection, {
       type: "remove-marker",
       id: connection.id,
-    } satisfies OutgoingMessage);
-    
-    for (const conn of this.connections.values()) {
-      if (conn.id !== connection.id) {
-        try {
-          conn.send(message);
-        } catch (error) {
-          console.error(`Error sending remove-marker to ${conn.id}:`, error);
-        }
-      }
-    }
+    });
   }
 
   onClose(connection: Connection): void | Promise<void> {
