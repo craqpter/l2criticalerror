@@ -355,7 +355,7 @@ function App() {
         <a href="/server-info" className="server-info-link">
           📖 Read Full Server Description
         </a>
-        <a href="https://drive.google.com/file/d/11v4G7CWplFG3PJ2RHisoJKMprvZQRsb3/view?usp=sharing" target="_blank">
+        <a href="https://drive.google.com/file/d/13Fm0M30JIC8GxYvw3iCrmzT0dbjdNKce/view?usp=sharing" target="_blank">
           📥 Download Client
         </a>
         <a href="https://t.me/l2CriticalError" target="_blank">
@@ -416,6 +416,16 @@ function App() {
               src="https://l2-servera.com/wp-content/themes/servers/assets/images/button/black.gif" 
               alt="Black theme" 
               title="Black theme"
+              className="server-button"
+            />
+          </a>
+          <a href="http://l2top.ru/?voteme=ID вашего сервера получите после регистрации" target="_blank" rel="noopener noreferrer">
+            <img 
+              src="http://l2top.ru/catalog/top.php?id=ID вашего сервера получите после регистрации"
+              width="88" 
+              height="31" 
+              border="0" 
+              alt="L2top: Рейтинг-каталог серверов Lineage2"
               className="server-button"
             />
           </a>
