@@ -91,9 +91,15 @@ export class Globe extends Server {
 
   private async updateGlobalStats(country: string) {
     try {
-      const stats = await this.storage?.get<Record<string, number>>("globalStats") || {};
+      if (!this.storage) {
+        console.warn('Storage not available, skipping global stats update');
+        return;
+      }
+      
+      const stats = await this.storage.get<Record<string, number>>("globalStats") || {};
       stats[country] = (stats[country] || 0) + 1;
-      await this.storage?.put("globalStats", stats);
+      await this.storage.put("globalStats", stats);
+      console.log(`Updated global stats for ${country}:`, stats[country]);
     } catch (error) {
       console.error('Error updating global stats:', error);
     }
@@ -101,7 +107,14 @@ export class Globe extends Server {
 
   private async getGlobalStats(): Promise<Record<string, number>> {
     try {
-      return await this.storage?.get<Record<string, number>>("globalStats") || {};
+      if (!this.storage) {
+        console.warn('Storage not available, returning empty global stats');
+        return {};
+      }
+      
+      const stats = await this.storage.get<Record<string, number>>("globalStats") || {};
+      console.log('Retrieved global stats:', stats);
+      return stats;
     } catch (error) {
       console.error('Error getting global stats:', error);
       return {};
