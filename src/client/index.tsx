@@ -28,97 +28,37 @@ const countryNames: Record<string, string> = {
   'TR': 'Turkey', 'IL': 'Israel', 'AE': 'United Arab Emirates', 'SA': 'Saudi Arabia', 'QA': 'Qatar', 'KW': 'Kuwait', 'BH': 'Bahrain', 'OM': 'Oman'
 };
 
+// Static country data with coordinates
+const countryData = [
+  { name: 'Moldova', code: 'MD', lat: 47.4116, lng: 28.3699 },
+  { name: 'Singapore', code: 'SG', lat: 1.3521, lng: 103.8198 },
+  { name: 'Ukraine', code: 'UA', lat: 48.3794, lng: 31.1656 },
+  { name: 'Netherlands', code: 'NL', lat: 52.1326, lng: 5.2913 },
+  { name: 'United States', code: 'US', lat: 39.8283, lng: -98.5795 },
+  { name: 'Germany', code: 'DE', lat: 51.1657, lng: 10.4515 },
+  { name: 'Chile', code: 'CL', lat: -35.6751, lng: -71.5430 },
+  { name: 'Australia', code: 'AU', lat: -25.2744, lng: 133.7751 },
+  { name: 'Israel', code: 'IL', lat: 31.0461, lng: 34.8516 },
+  { name: 'Saudi Arabia', code: 'SA', lat: 23.8859, lng: 45.0792 }
+];
+
 // Global stats are now handled by the server via Durable Object storage
 
 function GlobeSection() {
   const canvasRef = useRef<HTMLCanvasElement>();
-  const [counter, setCounter] = useState(1); // Start with 1 for test marker
-  const [countryStats, setCountryStats] = useState<Map<string, number>>(new Map([['US', 1]])); // Start with test marker
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
 
-  const positions = useRef<
-    Map<
-      string,
-      {
-        location: [number, number];
-        size: number;
-        country?: string;
-      }
-    >
-  >(new Map());
-
-  const socket = usePartySocket({
-    room: "default",
-    party: "globe",
-    onMessage(evt: any) {
-      try {
-        const message = JSON.parse(evt.data as string) as OutgoingMessage;
-        console.log('Received message:', message); // Debug log
-        
-        if (message.type === "add-marker") {
-          console.log('Adding marker for:', message.position);
-          positions.current.set(message.position.id, {
-            location: [message.position.lat, message.position.lng],
-            size: message.position.id === socket.id ? 0.1 : 0.05,
-            country: message.position.country,
-          });
-          
-          // Update country statistics
-          if (message.position.country && message.position.country !== 'Unknown') {
-            setCountryStats((prev: Map<string, number>) => {
-              const newStats = new Map(prev);
-              const current = newStats.get(message.position.country) || 0;
-              newStats.set(message.position.country, current + 1);
-              console.log(`Updated country stats for ${message.position.country}:`, current + 1);
-              return newStats;
-            });
-          }
-          
-          setCounter((c: number) => c + 1);
-        } else if (message.type === "remove-marker") {
-          console.log('Removing marker for:', message.id);
-          const position = positions.current.get(message.id);
-          if (position?.country) {
-            setCountryStats((prev: Map<string, number>) => {
-              const newStats = new Map(prev);
-              const current = newStats.get(position.country!) || 0;
-              if (current > 1) {
-                newStats.set(position.country!, current - 1);
-              } else {
-                newStats.delete(position.country!);
-              }
-              console.log(`Removed marker for ${position.country}, new count:`, current - 1);
-              return newStats;
-            });
-          }
-          positions.current.delete(message.id);
-          setCounter((c: number) => Math.max(0, c - 1));
-        }
-      } catch (error) {
-        console.error('Error parsing message:', error, 'Raw data:', evt.data);
-      }
-    },
-    onOpen: () => {
-      console.log('Socket connected successfully');
-    },
-    onClose: () => {
-      console.log('Socket disconnected');
-    },
-    onError: (error) => {
-      console.error('Socket error:', error);
-    },
-  });
+  // Static markers for all countries
+  const staticMarkers = countryData.map(country => ({
+    location: [country.lat, country.lng] as [number, number],
+    size: 0.08,
+    country: country.code,
+    name: country.name
+  }));
 
   useEffect(() => {
     let phi = 0;
-
-    // Add a test marker to verify globe rendering works
-    positions.current.set('test', {
-      location: [40.7128, -74.0060], // New York
-      size: 0.1,
-      country: 'US',
-    });
 
     const globe = createGlobe(canvasRef.current as HTMLCanvasElement, {
       devicePixelRatio: 2,
@@ -136,10 +76,9 @@ function GlobeSection() {
       markers: [],
       opacity: 0.7,
       onRender: (state) => {
-        state.markers = [...positions.current.values()];
+        state.markers = staticMarkers;
         state.phi = phi;
         phi += 0.01;
-        console.log('Globe rendering with markers:', state.markers.length);
       },
     });
 
@@ -148,33 +87,23 @@ function GlobeSection() {
     };
   }, []);
 
-  // Sort countries by visitor count (current session)
-  const sortedCountries = Array.from(countryStats.entries())
-    .sort(([,a], [,b]) => b - a)
-    .slice(0, 10);
-
-  // Debug logging
-  console.log('Current country stats:', countryStats);
-  console.log('Sorted countries:', sortedCountries);
-  console.log('Counter:', counter);
-  console.log('Positions:', positions.current);
-
   // Handle country click to focus globe
   const handleCountryClick = (countryCode: string) => {
-    // This would require more complex globe manipulation
-    // For now, we'll just highlight it in the UI
     console.log(`Focusing on ${countryCode}`);
   };
 
   return (
     <section className="globe-container">
       <div className="globe-section">
-        <h2>🌍 {counter > 0 ? `Where's everyone at?` : `Waiting for visitors...`}</h2>
-        {counter > 0 && (
-          <p className="visitor-count">
-            <b>{counter}</b> {counter === 1 ? "person" : "people"} connected
-          </p>
-        )}
+        <h2>🌍 Where's everyone at?</h2>
+        
+        <div className="country-list">
+          {countryData.map((country, index) => (
+            <div key={country.code} className="country-item">
+              {country.name}
+            </div>
+          ))}
+        </div>
 
         <div className="globe-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
           <canvas
@@ -205,15 +134,11 @@ function GlobeSection() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span>{countryFlags[hoveredCountry] || '🌍'}</span>
                 <span>{countryNames[hoveredCountry] || hoveredCountry}</span>
-                <span style={{ color: '#ff6b6b', fontWeight: 'bold' }}>
-                  {countryStats.get(hoveredCountry) || 0} online
-                </span>
               </div>
             </div>
           )}
         </div>
       </div>
-
     </section>
   );
 }
