@@ -38,15 +38,8 @@ function GlobeSection() {
     ['DE', 1],
     ['FR', 1],
   ]));
-  const [globalStats, setGlobalStats] = useState<Record<string, number>>({
-    'US': 15,
-    'DE': 8,
-    'FR': 6,
-    'BR': 4,
-    'JP': 3,
-  });
-  const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
+  const [globalStats, setGlobalStats] = useState<Record<string, number>>({});
+  const [socketConnected, setSocketConnected] = useState(false);
 
   const positions = useRef<
     Map<
@@ -75,11 +68,12 @@ function GlobeSection() {
           });
           
           // Update country statistics
-          if (message.position.country) {
+          if (message.position.country && message.position.country !== 'Unknown') {
             setCountryStats((prev: Map<string, number>) => {
               const newStats = new Map(prev);
               const current = newStats.get(message.position.country) || 0;
               newStats.set(message.position.country, current + 1);
+              console.log(`Updated country stats for ${message.position.country}:`, current + 1);
               return newStats;
             });
           }
@@ -96,6 +90,7 @@ function GlobeSection() {
               } else {
                 newStats.delete(position.country!);
               }
+              console.log(`Removed marker for ${position.country}, new count:`, current - 1);
               return newStats;
             });
           }
@@ -106,17 +101,20 @@ function GlobeSection() {
           setGlobalStats(message.stats);
         }
       } catch (error) {
-        console.error('Error parsing message:', error);
+        console.error('Error parsing message:', error, 'Raw data:', evt.data);
       }
     },
     onOpen: () => {
       console.log('Socket connected');
+      setSocketConnected(true);
     },
     onClose: () => {
       console.log('Socket disconnected');
+      setSocketConnected(false);
     },
     onError: (error) => {
       console.error('Socket error:', error);
+      setSocketConnected(false);
     },
   });
 
@@ -170,6 +168,8 @@ function GlobeSection() {
   // Debug logging
   console.log('Current country stats:', countryStats);
   console.log('Global stats:', globalStats);
+  console.log('Sorted countries:', sortedCountries);
+  console.log('Sorted all-time:', sortedAllTime);
   console.log('Counter:', counter);
   console.log('Positions:', positions.current);
 
@@ -232,6 +232,11 @@ function GlobeSection() {
 
       <div className="stats-panel">
         <h3>📊 Global Statistics</h3>
+        <div className="connection-status">
+          <span className={`status-indicator ${socketConnected ? 'connected' : 'disconnected'}`}>
+            {socketConnected ? '🟢 Connected' : '🔴 Disconnected'}
+          </span>
+        </div>
         
         {/* Current Session */}
         <div className="stats-section">
