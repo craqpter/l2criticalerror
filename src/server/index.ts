@@ -55,6 +55,16 @@ export class Globe extends Server {
       type: "add-marker",
       position,
     });
+
+    // Also send the new connection its own marker
+    try {
+      conn.send(JSON.stringify({
+        type: "add-marker",
+        position,
+      } satisfies OutgoingMessage));
+    } catch (error) {
+      console.error('Error sending own marker to new connection:', error);
+    }
   }
 
   private broadcastToOthers(excludeConnection: Connection, message: OutgoingMessage) {
