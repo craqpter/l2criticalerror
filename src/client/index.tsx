@@ -57,6 +57,7 @@ function GlobeSection() {
         console.log('Received message:', message); // Debug log
         
         if (message.type === "add-marker") {
+          console.log('Adding marker for:', message.position);
           positions.current.set(message.position.id, {
             location: [message.position.lat, message.position.lng],
             size: message.position.id === socket.id ? 0.1 : 0.05,
@@ -76,6 +77,7 @@ function GlobeSection() {
           
           setCounter((c: number) => c + 1);
         } else if (message.type === "remove-marker") {
+          console.log('Removing marker for:', message.id);
           const position = positions.current.get(message.id);
           if (position?.country) {
             setCountryStats((prev: Map<string, number>) => {
