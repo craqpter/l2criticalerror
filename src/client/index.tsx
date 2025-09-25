@@ -28,6 +28,8 @@ const countryNames: Record<string, string> = {
   'TR': 'Turkey', 'IL': 'Israel', 'AE': 'United Arab Emirates', 'SA': 'Saudi Arabia', 'QA': 'Qatar', 'KW': 'Kuwait', 'BH': 'Bahrain', 'OM': 'Oman'
 };
 
+// Global stats are now handled by the server via Durable Object storage
+
 function GlobeSection() {
   const canvasRef = useRef<HTMLCanvasElement>();
   const [counter, setCounter] = useState(4);
@@ -36,7 +38,6 @@ function GlobeSection() {
     ['DE', 1],
     ['FR', 1],
   ]));
-  const [socketConnected, setSocketConnected] = useState(false);
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
 
@@ -95,56 +96,20 @@ function GlobeSection() {
           }
           positions.current.delete(message.id);
           setCounter((c: number) => Math.max(0, c - 1));
-        }
       } catch (error) {
         console.error('Error parsing message:', error, 'Raw data:', evt.data);
       }
     },
     onOpen: () => {
       console.log('Socket connected successfully');
-      setSocketConnected(true);
     },
     onClose: () => {
       console.log('Socket disconnected');
-      setSocketConnected(false);
     },
     onError: (error) => {
       console.error('Socket error:', error);
-      setSocketConnected(false);
     },
   });
-
-  // Initial connection check
-  useEffect(() => {
-    if (socket) {
-      const isConnected = socket.readyState === WebSocket.OPEN;
-      console.log('Initial connection check - readyState:', socket.readyState, 'isConnected:', isConnected);
-      setSocketConnected(isConnected);
-    }
-  }, [socket]);
-
-  // Monitor socket connection state changes
-  useEffect(() => {
-    console.log('Socket connection state changed:', socketConnected);
-    console.log('Socket readyState:', socket?.readyState);
-  }, [socketConnected]);
-
-  // Check socket connection status periodically
-  useEffect(() => {
-    const checkConnection = () => {
-      if (socket) {
-        const isConnected = socket.readyState === WebSocket.OPEN;
-        console.log('Manual connection check - readyState:', socket.readyState, 'isConnected:', isConnected);
-        if (isConnected !== socketConnected) {
-          console.log('Connection state mismatch detected, updating...');
-          setSocketConnected(isConnected);
-        }
-      }
-    };
-
-    const interval = setInterval(checkConnection, 2000);
-    return () => clearInterval(interval);
-  }, [socket, socketConnected]);
 
   useEffect(() => {
     let phi = 0;
@@ -193,7 +158,6 @@ function GlobeSection() {
   console.log('Sorted countries:', sortedCountries);
   console.log('Counter:', counter);
   console.log('Positions:', positions.current);
-  console.log('Socket connected:', socketConnected);
 
   // Handle country click to focus globe
   const handleCountryClick = (countryCode: string) => {
@@ -254,11 +218,6 @@ function GlobeSection() {
 
       <div className="stats-panel">
         <h3>📊 Current Online Visitors</h3>
-        <div className="connection-status">
-          <span className={`status-indicator ${socketConnected ? 'connected' : 'disconnected'}`}>
-            {socketConnected ? '🟢 Connected' : '🔴 Disconnected'}
-          </span>
-        </div>
         
         {/* Current Session */}
         <div className="stats-section">
@@ -274,7 +233,6 @@ function GlobeSection() {
                     style={{ cursor: 'pointer' }}
                   >
                     <span className="country-flag">{countryFlags[countryCode] || '🌍'}</span>
-                    <span className="country-name">{countryNames[countryCode] || countryCode}</span>
                     <span className={`country-count ${index < 3 ? `top-${index + 1}` : ''}`}>
                       {count}
                     </span>
