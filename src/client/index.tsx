@@ -40,6 +40,8 @@ function GlobeSection() {
   ]));
   const [globalStats, setGlobalStats] = useState<Record<string, number>>({});
   const [socketConnected, setSocketConnected] = useState(false);
+  const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
 
   const positions = useRef<
     Map<
