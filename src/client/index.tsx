@@ -96,14 +96,6 @@ function GlobeSection() {
     <section className="globe-container">
       <div className="globe-section">
         <h2>🌍 Where's everyone at?</h2>
-        
-        <div className="country-list">
-          {countryData.map((country, index) => (
-            <div key={country.code} className="country-item">
-              {country.name}
-            </div>
-          ))}
-        </div>
 
         <div className="globe-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
           <canvas
