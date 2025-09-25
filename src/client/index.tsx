@@ -419,13 +419,13 @@ function App() {
               className="server-button"
             />
           </a>
-          <a href="http://l2top.ru/?voteme=ID вашего сервера получите после регистрации" target="_blank" rel="noopener noreferrer">
+          <a href="http://l2top.ru/vote/31866/" target="_blank" rel="noopener noreferrer">
             <img 
-              src="http://l2top.ru/catalog/top.php?id=ID вашего сервера получите после регистрации"
-              width="88" 
-              height="31" 
+              src="http://l2top.ru/vb/31866.pgif"
+              width="88px" 
+              height="31px" 
               border="0" 
-              alt="L2top: Рейтинг-каталог серверов Lineage2"
+              alt="L2top.ru: Рейтинг-каталог серверов Lineage2"
               className="server-button"
             />
           </a>
