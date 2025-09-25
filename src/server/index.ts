@@ -36,26 +36,8 @@ export class Globe extends Server {
       position,
     });
 
-    // Update persistent global stats
-    if (countryCode && countryCode !== 'Unknown') {
-      await this.updateGlobalStats(countryCode);
-    }
-
-    // Get current global stats to send to all clients
-    const globalStats = await this.getGlobalStats();
-    console.log('Global stats:', globalStats);
-
-    // Send global stats to all connections (including the new one)
-    const globalStatsMessage = JSON.stringify({
-      type: "global-stats",
-      stats: globalStats,
-    } satisfies OutgoingMessage);
-
     for (const connection of this.connections.values()) {
       try {
-        // Send global stats to everyone
-        connection.send(globalStatsMessage);
-        
         // Send existing markers to the new connection
         if (connection.id !== conn.id) {
           conn.send(
@@ -86,38 +68,6 @@ export class Globe extends Server {
           console.error(`Error sending new marker to ${connection.id}:`, error);
         }
       }
-    }
-  }
-
-  private async updateGlobalStats(country: string) {
-    try {
-      if (!this.storage) {
-        console.warn('Storage not available, skipping global stats update');
-        return;
-      }
-      
-      const stats = await this.storage.get<Record<string, number>>("globalStats") || {};
-      stats[country] = (stats[country] || 0) + 1;
-      await this.storage.put("globalStats", stats);
-      console.log(`Updated global stats for ${country}:`, stats[country]);
-    } catch (error) {
-      console.error('Error updating global stats:', error);
-    }
-  }
-
-  private async getGlobalStats(): Promise<Record<string, number>> {
-    try {
-      if (!this.storage) {
-        console.warn('Storage not available, returning empty global stats');
-        return {};
-      }
-      
-      const stats = await this.storage.get<Record<string, number>>("globalStats") || {};
-      console.log('Retrieved global stats:', stats);
-      return stats;
-    } catch (error) {
-      console.error('Error getting global stats:', error);
-      return {};
     }
   }
 
