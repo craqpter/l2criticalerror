@@ -32,8 +32,8 @@ const countryNames: Record<string, string> = {
 
 function GlobeSection() {
   const canvasRef = useRef<HTMLCanvasElement>();
-  const [counter, setCounter] = useState(0);
-  const [countryStats, setCountryStats] = useState<Map<string, number>>(new Map());
+  const [counter, setCounter] = useState(1); // Start with 1 for test marker
+  const [countryStats, setCountryStats] = useState<Map<string, number>>(new Map([['US', 1]])); // Start with test marker
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
 
@@ -113,6 +113,13 @@ function GlobeSection() {
   useEffect(() => {
     let phi = 0;
 
+    // Add a test marker to verify globe rendering works
+    positions.current.set('test', {
+      location: [40.7128, -74.0060], // New York
+      size: 0.1,
+      country: 'US',
+    });
+
     const globe = createGlobe(canvasRef.current as HTMLCanvasElement, {
       devicePixelRatio: 2,
       width: 400 * 2,
@@ -132,6 +139,7 @@ function GlobeSection() {
         state.markers = [...positions.current.values()];
         state.phi = phi;
         phi += 0.01;
+        console.log('Globe rendering with markers:', state.markers.length);
       },
     });
 
@@ -162,12 +170,10 @@ function GlobeSection() {
     <section className="globe-container">
       <div className="globe-section">
         <h2>🌍 {counter > 0 ? `Where's everyone at?` : `Waiting for visitors...`}</h2>
-        {counter > 0 ? (
-          <p>
+        {counter > 0 && (
+          <p className="visitor-count">
             <b>{counter}</b> {counter === 1 ? "person" : "people"} connected
           </p>
-        ) : (
-          <p>&nbsp;</p>
         )}
 
         <div className="globe-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
@@ -208,40 +214,6 @@ function GlobeSection() {
         </div>
       </div>
 
-      <div className="stats-panel">
-        <h3>📊 Current Online Visitors</h3>
-        
-        {/* Current Session */}
-        <div className="stats-section">
-          <h4>🟢 Online Now</h4>
-          <div className="country-stats">
-            {sortedCountries.length > 0 ? (
-              <>
-                {sortedCountries.map(([countryCode, count], index) => (
-                  <div 
-                    key={countryCode} 
-                    className="country-stat clickable"
-                    onClick={() => handleCountryClick(countryCode)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <span className="country-flag">{countryFlags[countryCode] || '🌍'}</span>
-                    <span className={`country-count ${index < 3 ? `top-${index + 1}` : ''}`}>
-                      {count}
-                    </span>
-                  </div>
-                ))}
-                {countryStats.size > 10 && (
-                  <div className="more-countries-indicator">
-                    <span>+{countryStats.size - 10} more countries</span>
-                  </div>
-                )}
-              </>
-            ) : (
-              <p className="no-stats">No visitors yet</p>
-            )}
-          </div>
-        </div>
-      </div>
     </section>
   );
 }
