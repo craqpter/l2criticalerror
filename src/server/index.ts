@@ -18,9 +18,10 @@ export class Globe extends Server {
     const country = ctx.request.cf?.country as string | undefined;
     
     // Use fallback coordinates if geolocation is not available
-    const lat = latitude ? parseFloat(latitude) : 0;
-    const lng = longitude ? parseFloat(longitude) : 0;
-    const countryCode = country || 'Unknown';
+    // Default to New York if no geolocation data is available
+    const lat = latitude ? parseFloat(latitude) : 40.7128;
+    const lng = longitude ? parseFloat(longitude) : -74.0060;
+    const countryCode = country || 'US';
     
     const position = {
       lat,
@@ -30,12 +31,25 @@ export class Globe extends Server {
     };
     
     console.log(`Position for ${conn.id}:`, position);
+    console.log(`Cloudflare geolocation data:`, {
+      latitude: ctx.request.cf?.latitude,
+      longitude: ctx.request.cf?.longitude,
+      country: ctx.request.cf?.country,
+      city: ctx.request.cf?.city,
+      region: ctx.request.cf?.region
+    });
     
     // And save this on the connection's state
     conn.setState({
       position,
     });
 
+    // Update persistent global stats
+    if (countryCode && countryCode !== 'Unknown') {
+      await this.updateGlobalStats(countryCode);
+    }
+
+    // Send existing markers to the new connection
     for (const connection of this.connections.values()) {
       try {
         // Send existing markers to the new connection
@@ -68,6 +82,38 @@ export class Globe extends Server {
           console.error(`Error sending new marker to ${connection.id}:`, error);
         }
       }
+    }
+  }
+
+  private async updateGlobalStats(country: string) {
+    try {
+      if (!this.storage) {
+        console.warn('Storage not available, skipping global stats update');
+        return;
+      }
+      
+      const stats = await this.storage.get<Record<string, number>>("globalStats") || {};
+      stats[country] = (stats[country] || 0) + 1;
+      await this.storage.put("globalStats", stats);
+      console.log(`Updated global stats for ${country}:`, stats[country]);
+    } catch (error) {
+      console.error('Error updating global stats:', error);
+    }
+  }
+
+  private async getGlobalStats(): Promise<Record<string, number>> {
+    try {
+      if (!this.storage) {
+        console.warn('Storage not available, returning empty global stats');
+        return {};
+      }
+      
+      const stats = await this.storage.get<Record<string, number>>("globalStats") || {};
+      console.log('Retrieved global stats:', stats);
+      return stats;
+    } catch (error) {
+      console.error('Error getting global stats:', error);
+      return {};
     }
   }
 
