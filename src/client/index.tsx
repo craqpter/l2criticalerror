@@ -107,7 +107,7 @@ function GlobeSection() {
       }
     },
     onOpen: () => {
-      console.log('Socket connected');
+      console.log('Socket connected successfully');
       setSocketConnected(true);
     },
     onClose: () => {
@@ -119,6 +119,38 @@ function GlobeSection() {
       setSocketConnected(false);
     },
   });
+
+  // Initial connection check
+  useEffect(() => {
+    if (socket) {
+      const isConnected = socket.readyState === WebSocket.OPEN;
+      console.log('Initial connection check - readyState:', socket.readyState, 'isConnected:', isConnected);
+      setSocketConnected(isConnected);
+    }
+  }, [socket]);
+
+  // Monitor socket connection state changes
+  useEffect(() => {
+    console.log('Socket connection state changed:', socketConnected);
+    console.log('Socket readyState:', socket?.readyState);
+  }, [socketConnected]);
+
+  // Check socket connection status periodically
+  useEffect(() => {
+    const checkConnection = () => {
+      if (socket) {
+        const isConnected = socket.readyState === WebSocket.OPEN;
+        console.log('Manual connection check - readyState:', socket.readyState, 'isConnected:', isConnected);
+        if (isConnected !== socketConnected) {
+          console.log('Connection state mismatch detected, updating...');
+          setSocketConnected(isConnected);
+        }
+      }
+    };
+
+    const interval = setInterval(checkConnection, 2000);
+    return () => clearInterval(interval);
+  }, [socket, socketConnected]);
 
   useEffect(() => {
     let phi = 0;
@@ -174,6 +206,7 @@ function GlobeSection() {
   console.log('Sorted all-time:', sortedAllTime);
   console.log('Counter:', counter);
   console.log('Positions:', positions.current);
+  console.log('Socket connected:', socketConnected);
 
   // Handle country click to focus globe
   const handleCountryClick = (countryCode: string) => {
