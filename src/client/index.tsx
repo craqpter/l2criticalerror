@@ -32,12 +32,8 @@ const countryNames: Record<string, string> = {
 
 function GlobeSection() {
   const canvasRef = useRef<HTMLCanvasElement>();
-  const [counter, setCounter] = useState(4);
-  const [countryStats, setCountryStats] = useState<Map<string, number>>(new Map([
-    ['US', 2],
-    ['DE', 1],
-    ['FR', 1],
-  ]));
+  const [counter, setCounter] = useState(0);
+  const [countryStats, setCountryStats] = useState<Map<string, number>>(new Map());
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
 
@@ -96,6 +92,7 @@ function GlobeSection() {
           }
           positions.current.delete(message.id);
           setCounter((c: number) => Math.max(0, c - 1));
+        }
       } catch (error) {
         console.error('Error parsing message:', error, 'Raw data:', evt.data);
       }
@@ -113,13 +110,6 @@ function GlobeSection() {
 
   useEffect(() => {
     let phi = 0;
-
-    // Add a test marker for debugging
-    positions.current.set('test', {
-      location: [40.7128, -74.0060], // New York
-      size: 0.1,
-      country: 'US',
-    });
 
     const globe = createGlobe(canvasRef.current as HTMLCanvasElement, {
       devicePixelRatio: 2,
@@ -169,7 +159,7 @@ function GlobeSection() {
   return (
     <section className="globe-container">
       <div className="globe-section">
-        <h2>🌍 Where's everyone at?</h2>
+        <h2>🌍 {counter > 0 ? `Where's everyone at?` : `Waiting for visitors...`}</h2>
         {counter > 0 ? (
           <p>
             <b>{counter}</b> {counter === 1 ? "person" : "people"} connected
