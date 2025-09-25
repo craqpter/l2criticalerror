@@ -28,8 +28,6 @@ const countryNames: Record<string, string> = {
   'TR': 'Turkey', 'IL': 'Israel', 'AE': 'United Arab Emirates', 'SA': 'Saudi Arabia', 'QA': 'Qatar', 'KW': 'Kuwait', 'BH': 'Bahrain', 'OM': 'Oman'
 };
 
-// Global stats are now handled by the server via Durable Object storage
-
 function GlobeSection() {
   const canvasRef = useRef<HTMLCanvasElement>();
   const [counter, setCounter] = useState(4);
@@ -38,7 +36,6 @@ function GlobeSection() {
     ['DE', 1],
     ['FR', 1],
   ]));
-  const [globalStats, setGlobalStats] = useState<Record<string, number>>({});
   const [socketConnected, setSocketConnected] = useState(false);
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
@@ -98,9 +95,6 @@ function GlobeSection() {
           }
           positions.current.delete(message.id);
           setCounter((c: number) => Math.max(0, c - 1));
-        } else if (message.type === "global-stats") {
-          console.log('Received global stats:', message.stats); // Debug log
-          setGlobalStats(message.stats);
         }
       } catch (error) {
         console.error('Error parsing message:', error, 'Raw data:', evt.data);
@@ -194,16 +188,9 @@ function GlobeSection() {
     .sort(([,a], [,b]) => b - a)
     .slice(0, 10);
 
-  // Sort countries by all-time visitor count (from server)
-  const sortedAllTime = Object.entries(globalStats)
-    .sort(([,a], [,b]) => b - a)
-    .slice(0, 10);
-
   // Debug logging
   console.log('Current country stats:', countryStats);
-  console.log('Global stats:', globalStats);
   console.log('Sorted countries:', sortedCountries);
-  console.log('Sorted all-time:', sortedAllTime);
   console.log('Counter:', counter);
   console.log('Positions:', positions.current);
   console.log('Socket connected:', socketConnected);
@@ -266,7 +253,7 @@ function GlobeSection() {
       </div>
 
       <div className="stats-panel">
-        <h3>📊 Global Statistics</h3>
+        <h3>📊 Current Online Visitors</h3>
         <div className="connection-status">
           <span className={`status-indicator ${socketConnected ? 'connected' : 'disconnected'}`}>
             {socketConnected ? '🟢 Connected' : '🔴 Disconnected'}
@@ -275,7 +262,7 @@ function GlobeSection() {
         
         {/* Current Session */}
         <div className="stats-section">
-          <h4>🟢 Current Session</h4>
+          <h4>🟢 Online Now</h4>
           <div className="country-stats">
             {sortedCountries.length > 0 ? (
               <>
@@ -301,40 +288,6 @@ function GlobeSection() {
               </>
             ) : (
               <p className="no-stats">No visitors yet</p>
-            )}
-          </div>
-        </div>
-
-        {/* All-Time Statistics */}
-        <div className="stats-section">
-          <h4>⭐ All-Time Visitors</h4>
-          <div className="country-stats">
-            {sortedAllTime.length > 0 ? (
-              <>
-                {sortedAllTime.map(([countryCode, count], index) => (
-                  <div 
-                    key={countryCode} 
-                    className="country-stat all-time clickable"
-                    onClick={() => handleCountryClick(countryCode)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <span className="country-flag">{countryFlags[countryCode] || '🌍'}</span>
-                    <span className="country-name">{countryNames[countryCode] || countryCode}</span>
-                    <span className={`country-count all-time ${index < 3 ? `top-${index + 1}` : ''}`}>
-                      {count}
-                    </span>
-                  </div>
-                ))}
-                {Object.keys(globalStats).length > 10 && (
-                  <div className="more-countries-indicator">
-                    <span>+{Object.keys(globalStats).length - 10} more countries</span>
-                  </div>
-                )}
-              </>
-            ) : (
-              <p className="no-stats">
-                {Object.keys(globalStats).length === 0 ? 'Loading global stats...' : 'No historical data'}
-              </p>
             )}
           </div>
         </div>
