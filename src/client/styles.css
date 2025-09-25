@@ -1549,6 +1549,39 @@ footer p {
   }
 }
 
+/* Country List */
+.country-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  justify-content: center;
+}
+
+.country-item {
+  background: linear-gradient(135deg, 
+    rgba(26, 26, 26, 0.8) 0%, 
+    rgba(42, 42, 42, 0.8) 50%, 
+    rgba(26, 26, 26, 0.8) 100%);
+  border: 1px solid #b8860b;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  color: #ffd700;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  transition: all 0.3s ease;
+}
+
+.country-item:hover {
+  background: linear-gradient(135deg, 
+    rgba(42, 42, 42, 0.9) 0%, 
+    rgba(58, 58, 58, 0.9) 50%, 
+    rgba(42, 42, 42, 0.9) 100%);
+  border-color: #ffd700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
 /* Visitor Count Display */
 .visitor-count {
   text-align: center;
