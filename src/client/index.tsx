@@ -366,7 +366,10 @@ function App() {
             📢 Telegram Channel
           </a>
           <a href="https://t.me/lineage2c4bot" target="_blank">
-            🤖 Registration Bot
+            🤖 Telegram registration bot
+          </a>
+          <a href="https://discord.com/oauth2/authorize?client_id=1415942904668749856" target="_blank" rel="noopener noreferrer">
+            💬 Discord registration bot
           </a>
         </div>
       </section>
