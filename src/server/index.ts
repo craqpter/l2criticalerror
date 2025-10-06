@@ -153,6 +153,265 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     
+    // Handle CSS file serving
+    if (url.pathname === "/styles.css") {
+      try {
+        // For now, return a minimal CSS that matches the main page
+        const cssContent = `
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+body.statistics-body {
+  font-family: 'Crimson Text', serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #d4af37;
+  background: 
+    linear-gradient(135deg, rgba(10, 10, 10, 0.8) 0%, rgba(26, 26, 26, 0.8) 25%, rgba(15, 15, 15, 0.8) 50%, rgba(26, 26, 26, 0.8) 75%, rgba(10, 10, 10, 0.8) 100%);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  text-align: center;
+  padding-top: 40px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body.statistics-body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 48, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+body.statistics-body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.statistics-page {
+  background: linear-gradient(135deg, 
+    rgba(26, 26, 26, 0.8) 0%, 
+    rgba(42, 42, 42, 0.8) 100%);
+  border: 2px solid #b8860b;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 800px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(184, 134, 11, 0.2);
+  position: relative;
+}
+
+.statistics-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    rgba(255, 215, 0, 0.05) 0%, 
+    transparent 25%, 
+    transparent 75%, 
+    rgba(255, 215, 0, 0.05) 100%);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.statistics-page h1 {
+  color: #ffd700;
+  font-family: 'Cinzel', serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  font-size: 2.5rem;
+}
+
+.statistics-section {
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.statistics-section:last-child {
+  margin-bottom: 0;
+}
+
+.statistics-section h2 {
+  color: #ffd700;
+  font-family: 'Cinzel', serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.statistics-table {
+  width: 100%;
+  background: #2e2e2e;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.statistics-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.statistics-table tr:hover td {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.statistics-table tr:last-child td {
+  border-bottom: none;
+}
+
+.player-name {
+  color: #ff9900;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.player-score {
+  color: #cccccc;
+  font-weight: 500;
+  text-align: right;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #8b4513 100%);
+  color: #ffd700;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 2px solid #b8860b;
+  font-family: 'Cinzel', serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  min-height: 60px;
+  overflow: hidden;
+}
+
+.back-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 215, 0, 0.2) 50%, 
+    transparent 100%);
+  transition: left 0.5s ease;
+}
+
+.back-link:hover::before {
+  left: 100%;
+}
+
+.back-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(255, 215, 0, 0.3);
+  color: #ffff00;
+  border-color: #ffd700;
+  text-decoration: none;
+}
+
+@media (max-width: 480px) {
+  .statistics-page {
+    padding: 1rem;
+    margin: 1rem auto;
+  }
+
+  .statistics-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .statistics-section h2 {
+    font-size: 1.1rem;
+  }
+
+  .statistics-table td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .back-link {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+`;
+        return new Response(cssContent, {
+          headers: {
+            "Content-Type": "text/css;charset=utf-8",
+            "Cache-Control": "public, max-age=3600",
+          },
+        });
+      } catch (error) {
+        console.error("Error serving styles.css:", error);
+        return new Response("/* CSS file not found */", {
+          headers: {
+            "Content-Type": "text/css;charset=utf-8",
+          },
+        });
+      }
+    }
+    
+    // Handle favicon
+    if (url.pathname === "/favicon.ico") {
+      try {
+        // Return a simple favicon response
+        return new Response("", {
+          headers: {
+            "Content-Type": "image/x-icon",
+          },
+        });
+      } catch (error) {
+        console.error("Error serving favicon.ico:", error);
+      }
+    }
+    
     // Handle server info page route
     if (url.pathname === "/server-info") {
       try {
