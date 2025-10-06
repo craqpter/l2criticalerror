@@ -349,21 +349,26 @@ function App() {
 
       <section className="links">
         <h2>🔗 Quick Links</h2>
-        <a href="/guide" className="guide-link">
-          📖 Guide
-        </a>
-        <a href="/server-info" className="server-info-link">
-          📖 Read Full Server Description
-        </a>
-        <a href="https://drive.google.com/file/d/11v4G7CWplFG3PJ2RHisoJKMprvZQRsb3/view?usp=sharing" target="_blank">
-          📥 Download Client
-        </a>
-        <a href="https://t.me/l2CriticalError" target="_blank">
-          📢 Telegram Channel
-        </a>
-        <a href="https://t.me/lineage2c4bot" target="_blank">
-          🤖 Registration Bot
-        </a>
+        <div className="links-grid">
+          <a href="/guide" className="guide-link">
+            📖 Guide
+          </a>
+          <a href="/server-info" className="server-info-link">
+            📖 Server Description
+          </a>
+          <a href="/statistics" className="statistics-link">
+            🏆 Statistics
+          </a>
+          <a href="https://drive.google.com/file/d/11v4G7CWplFG3PJ2RHisoJKMprvZQRsb3/view?usp=sharing" target="_blank">
+            📥 Download Client
+          </a>
+          <a href="https://t.me/l2CriticalError" target="_blank">
+            📢 Telegram Channel
+          </a>
+          <a href="https://t.me/lineage2c4bot" target="_blank">
+            🤖 Registration Bot
+          </a>
+        </div>
       </section>
 
       {/* Discord and Telegram Widgets */}
