@@ -1578,6 +1578,29 @@ footer p {
   .server-button {
     max-width: 150px;
   }
+
+  .statistics-page {
+    padding: 1rem;
+    margin: 1rem auto;
+  }
+
+  .statistics-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .statistics-section h2 {
+    font-size: 1.1rem;
+  }
+
+  .statistics-table td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .back-link {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
 }
 
 /* Country List */
@@ -1629,15 +1652,47 @@ footer p {
 }
 
 /* Statistics Page Styles */
+body.statistics-body {
+  font-family: 'Crimson Text', serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #d4af37;
+  background: 
+    linear-gradient(135deg, rgba(10, 10, 10, 0.8) 0%, rgba(26, 26, 26, 0.8) 25%, rgba(15, 15, 15, 0.8) 50%, rgba(26, 26, 26, 0.8) 75%, rgba(10, 10, 10, 0.8) 100%);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  text-align: center;
+  padding-top: 40px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body.statistics-body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 48, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
 .statistics-page {
   background: linear-gradient(135deg, 
-    rgba(26, 26, 26, 0.95) 0%, 
-    rgba(42, 42, 42, 0.95) 100%);
+    rgba(26, 26, 26, 0.8) 0%, 
+    rgba(42, 42, 42, 0.8) 100%);
   border: 2px solid #b8860b;
   border-radius: 12px;
   padding: 2rem;
   margin: 2rem auto;
-  max-width: 600px;
+  max-width: 800px;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
@@ -1682,7 +1737,7 @@ footer p {
 }
 
 .statistics-section h2 {
-  color: #00ffff;
+  color: #ffd700;
   font-family: 'Cinzel', serif;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   margin-bottom: 1rem;
