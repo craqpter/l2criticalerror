@@ -1684,6 +1684,18 @@ body.statistics-body::before {
   z-index: -1;
 }
 
+body.statistics-body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  z-index: -1;
+}
+
 .statistics-page {
   background: linear-gradient(135deg, 
     rgba(26, 26, 26, 0.8) 0%, 
@@ -1781,11 +1793,13 @@ body.statistics-body::before {
 }
 
 .back-link {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 2rem;
   padding: 0.75rem 1.5rem;
   background: linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #8b4513 100%);
-  color: #00ff00;
+  color: #ffd700;
   text-decoration: none;
   border-radius: 8px;
   font-weight: 600;
@@ -1800,6 +1814,27 @@ body.statistics-body::before {
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   position: relative;
   z-index: 1;
+  text-align: center;
+  min-height: 60px;
+  overflow: hidden;
+}
+
+.back-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 215, 0, 0.2) 50%, 
+    transparent 100%);
+  transition: left 0.5s ease;
+}
+
+.back-link:hover::before {
+  left: 100%;
 }
 
 .back-link:hover {
@@ -1807,8 +1842,8 @@ body.statistics-body::before {
   box-shadow: 
     0 8px 25px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 0 20px rgba(0, 255, 0, 0.3);
+    0 0 20px rgba(255, 215, 0, 0.3);
   color: #ffff00;
-  border-color: #00ff00;
+  border-color: #ffd700;
   text-decoration: none;
 }
