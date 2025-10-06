@@ -194,7 +194,7 @@ export default {
     <link rel="stylesheet" href="/styles.css">
     <link rel="icon" href="/favicon.ico">
 </head>
-<body>
+<body class="statistics-body">
     <div class="statistics-page">
         <h1>🏆 Server Rankings</h1>
         
