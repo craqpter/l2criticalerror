@@ -181,6 +181,87 @@ export default {
       }
     }
     
+    // Handle statistics page route
+    if (url.pathname === "/statistics") {
+      try {
+        const statisticsHTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆 Server Statistics - Lineage 2 CriticalError C4</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="/favicon.ico">
+</head>
+<body>
+    <div class="statistics-page">
+        <h1>🏆 Server Rankings</h1>
+        
+        <div class="statistics-section">
+            <h2>Top PvP Players</h2>
+            <table class="statistics-table">
+                <tr><td class="player-name">Neo</td><td class="player-score">1</td></tr>
+                <tr><td class="player-name">imh0</td><td class="player-score">1</td></tr>
+                <tr><td class="player-name">ParintelePetru</td><td class="player-score">1</td></tr>
+                <tr><td class="player-name">SkyWrath</td><td class="player-score">0</td></tr>
+                <tr><td class="player-name">MazaFaker</td><td class="player-score">0</td></tr>
+                <tr><td class="player-name">CritikalEror</td><td class="player-score">0</td></tr>
+                <tr><td class="player-name">indig0</td><td class="player-score">0</td></tr>
+                <tr><td class="player-name">SuperGlad</td><td class="player-score">0</td></tr>
+                <tr><td class="player-name">Uzinelor</td><td class="player-score">0</td></tr>
+                <tr><td class="player-name">Doom</td><td class="player-score">0</td></tr>
+            </table>
+        </div>
+        
+        <div class="statistics-section">
+            <h2>Top PK Players</h2>
+            <table class="statistics-table">
+                <tr><td class="player-name">ParintelePetru</td><td class="player-score">4</td></tr>
+                <tr><td class="player-name">Neo</td><td class="player-score">3</td></tr>
+                <tr><td class="player-name">SkyWrath</td><td class="player-score">1</td></tr>
+                <tr><td class="player-name">Doom</td><td class="player-score">1</td></tr>
+                <tr><td class="player-name">MazaFaker</td><td class="player-score">0</td></tr>
+                <tr><td class="player-name">CritikalEror</td><td class="player-score">0</td></tr>
+                <tr><td class="player-name">indig0</td><td class="player-score">0</td></tr>
+                <tr><td class="player-name">SuperGlad</td><td class="player-score">0</td></tr>
+                <tr><td class="player-name">imh0</td><td class="player-score">0</td></tr>
+                <tr><td class="player-name">Uzinelor</td><td class="player-score">0</td></tr>
+            </table>
+        </div>
+        
+        <div class="statistics-section">
+            <h2>Top Level Players</h2>
+            <table class="statistics-table">
+                <tr><td class="player-name">Doom</td><td class="player-score">78</td></tr>
+                <tr><td class="player-name">Uzinelor</td><td class="player-score">78</td></tr>
+                <tr><td class="player-name">SkyWrath</td><td class="player-score">74</td></tr>
+                <tr><td class="player-name">NasteaUrsachi</td><td class="player-score">72</td></tr>
+                <tr><td class="player-name">Neo</td><td class="player-score">72</td></tr>
+                <tr><td class="player-name">StarKebab</td><td class="player-score">69</td></tr>
+                <tr><td class="player-name">imh0</td><td class="player-score">66</td></tr>
+                <tr><td class="player-name">ParintelePetru</td><td class="player-score">65</td></tr>
+                <tr><td class="player-name">indig0</td><td class="player-score">64</td></tr>
+                <tr><td class="player-name">Wizard</td><td class="player-score">61</td></tr>
+            </table>
+        </div>
+        
+        <a href="/" class="back-link">🔙 Return to Main Page</a>
+    </div>
+</body>
+</html>`;
+        
+        return new Response(statisticsHTML, {
+          headers: {
+            "Content-Type": "text/html;charset=utf-8",
+          },
+        });
+      } catch (error) {
+        console.error("Error serving statistics page:", error);
+        return new Response("Error loading statistics page", { status: 500 });
+      }
+    }
+    
     return (
       (await routePartykitRequest(request, { ...env })) ||
       new Response("Not Found", { status: 404 })
