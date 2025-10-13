@@ -9,6 +9,10 @@ import usePartySocket from "partysocket/react";
 import type { OutgoingMessage } from "../shared";
 import type { LegacyRef } from "react";
 
+// Language support
+import { LanguageProvider, useLanguage } from "../LanguageContext";
+import LanguageSelector from "../LanguageSelector";
+
 // Country data with flags
 const countryFlags: Record<string, string> = {
   'US': '🇺🇸', 'CA': '🇨🇦', 'MX': '🇲🇽', 'BR': '🇧🇷', 'AR': '🇦🇷', 'CL': '🇨🇱', 'CO': '🇨🇴', 'PE': '🇵🇪',
@@ -45,6 +49,7 @@ const countryData = [
 // Global stats are now handled by the server via Durable Object storage
 
 function GlobeSection() {
+  const { t } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement>();
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
@@ -95,7 +100,7 @@ function GlobeSection() {
   return (
     <section className="globe-container">
       <div className="globe-section">
-        <h2>🌍 Where's everyone at?</h2>
+        <h2>{t.whereEveryoneAt}</h2>
 
         <div className="globe-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
           <canvas
@@ -136,6 +141,7 @@ function GlobeSection() {
 }
 
 function App() {
+  const { t } = useLanguage();
   const [serverStatus] = useState({
     online: true,
     players: 247,
@@ -253,67 +259,70 @@ function App() {
 
   return (
     <div className="App">
+      {/* Language Selector */}
+      <LanguageSelector />
+
       {/* Server Status Indicator */}
       <div className="server-status">
         <div className={`status-badge ${serverStatus.online ? 'online' : 'offline'}`}>
           <span className="status-dot"></span>
-          {serverStatus.online ? '🟢 Online' : '🔴 Offline'}
+          {serverStatus.online ? t.online : t.offline}
         </div>
       </div>
 
       {/* Music Control */}
       <div className="music-control">
         <button className="music-toggle" onClick={toggleMusic}>
-          {musicPlaying ? '🔇 Stop Music' : '🎵 Background Music'}
+          {musicPlaying ? t.stopMusic : t.backgroundMusic}
         </button>
       </div>
 
       <header>
-        <h1>✨ Lineage 2 CriticalError C4 ✨</h1>
-        <p>Old-School C4 Private Server</p>
+        <h1>{t.title}</h1>
+        <p>{t.subtitle}</p>
       </header>
 
       {/* Countdown Timer Section */}
       <section className="countdown-section">
-        <h2>🚀 Server Opening</h2>
+        <h2>{t.serverOpening}</h2>
         {!serverOpened ? (
           <div className="countdown-timer">
             <div className="countdown-item">
               <span className="countdown-number">{timeLeft.days}</span>
-              <span className="countdown-label">Days</span>
+              <span className="countdown-label">{t.days}</span>
             </div>
             <div className="countdown-item">
               <span className="countdown-number">{timeLeft.hours}</span>
-              <span className="countdown-label">Hours</span>
+              <span className="countdown-label">{t.hours}</span>
             </div>
             <div className="countdown-item">
               <span className="countdown-number">{timeLeft.minutes}</span>
-              <span className="countdown-label">Minutes</span>
+              <span className="countdown-label">{t.minutes}</span>
             </div>
             <div className="countdown-item">
               <span className="countdown-number">{timeLeft.seconds}</span>
-              <span className="countdown-label">Seconds</span>
+              <span className="countdown-label">{t.seconds}</span>
             </div>
           </div>
         ) : (
           <div className="server-uptime">
-            <h3>✨ Lineage 2 CriticalError C4 ✨ Server works</h3>
+            <h3>{t.serverWorks}</h3>
             <div className="uptime-timer">
               <div className="uptime-item">
                 <span className="uptime-number">{serverUptime.days}</span>
-                <span className="uptime-label">Days</span>
+                <span className="uptime-label">{t.days}</span>
               </div>
               <div className="uptime-item">
                 <span className="uptime-number">{serverUptime.hours}</span>
-                <span className="uptime-label">Hours</span>
+                <span className="uptime-label">{t.hours}</span>
               </div>
               <div className="uptime-item">
                 <span className="uptime-number">{serverUptime.minutes}</span>
-                <span className="uptime-label">Minutes</span>
+                <span className="uptime-label">{t.minutes}</span>
               </div>
               <div className="uptime-item">
                 <span className="uptime-number">{serverUptime.seconds}</span>
-                <span className="uptime-label">Seconds</span>
+                <span className="uptime-label">{t.seconds}</span>
               </div>
             </div>
           </div>
@@ -321,20 +330,20 @@ function App() {
       </section>
 
       <section className="rates">
-        <h2>📊 Server Rates</h2>
+        <h2>{t.serverRates}</h2>
         <p>
-          XP/SP: x10
+          {t.xpSp}
           <br />
-          Adena: x5
+          {t.adena}
           <br />
-          Drops/Spoil: x5
+          {t.dropsSpoil}
           <br />
-          Quest Rewards: x2
+          {t.questRewards}
           <br />
-          Pet XP: x15
+          {t.petXp}
         </p>
-        <p>Features: NpcBuffer • MasterClass • Craft XP</p>
-        <p><strong>Noblesse and Subclasses:</strong> No quest needed</p>
+        <p>{t.features}</p>
+        <p><strong>{t.noblesseSubclasses}</strong></p>
       </section>
 
       {/* 🔥 Globe inserted here */}
@@ -343,73 +352,73 @@ function App() {
       {/* Latest Patch Release Button */}
       <section className="patch-section">
         <button className="patch-download-btn" onClick={handlePatchDownload}>
-          🔄 Latest Patch Release
+          {t.latestPatchRelease}
         </button>
       </section>
 
       <section className="links">
-        <h2>🔗 Quick Links</h2>
+        <h2>{t.quickLinks}</h2>
         <div className="links-grid">
           <a href="/guide" className="guide-link">
-            📖 Guide
+            {t.guide}
           </a>
           <a href="/server-info" className="server-info-link">
-            📖 Server Description
+            {t.serverDescription}
           </a>
           <a href="/statistics" className="statistics-link">
-            🏆 Statistics
+            {t.statistics}
           </a>
           <a href="https://drive.google.com/file/d/11v4G7CWplFG3PJ2RHisoJKMprvZQRsb3/view?usp=sharing" target="_blank">
-            📥 Download Client
+            {t.downloadClient}
           </a>
           <a href="https://t.me/l2CriticalError" target="_blank">
-            📢 Telegram Channel
+            {t.telegramChannel}
           </a>
           <a href="https://t.me/lineage2c4bot" target="_blank">
-            🤖 Telegram registration bot
+            {t.telegramRegistrationBot}
           </a>
           <a href="https://discord.com/oauth2/authorize?client_id=1415942904668749856" target="_blank" rel="noopener noreferrer">
-            💬 Discord registration bot
+            {t.discordRegistrationBot}
           </a>
         </div>
       </section>
 
       {/* Discord and Telegram Widgets */}
       <section className="social-widgets">
-        <h2>🌐 Join Our Community</h2>
+        <h2>{t.joinOurCommunity}</h2>
         <div className="widgets-container">
           {/* Discord Widget */}
           <div className="discord-widget">
-            <h3>💬 Discord Server</h3>
+            <h3>{t.discordServer}</h3>
             <div className="discord-info">
               <div className="discord-icon">🎮</div>
               <div className="discord-details">
                 <h4>L2CriticalError</h4>
                 <p className="discord-status">
                   <span className="status-indicator online"></span>
-                  <span>{discordMembers}</span> members online
+                  <span>{discordMembers}</span> {t.membersOnline}
                 </p>
               </div>
             </div>
             <a href="https://discord.gg/Gdn4QNz2VK" target="_blank" className="discord-join-btn">
-              Join Discord Server
+              {t.joinDiscordServer}
             </a>
           </div>
 
           {/* Telegram Widget */}
           <div className="telegram-widget">
-            <h3>📱 Telegram Channel</h3>
+            <h3>{t.telegramChannel}</h3>
             <div className="telegram-info">
               <div className="telegram-icon">📢</div>
               <div className="telegram-details">
                 <h4>@l2CriticalError</h4>
                 <p className="telegram-subscribers">
-                  <span className="subscriber-count">2</span> subscribers
+                  <span className="subscriber-count">2</span> {t.subscribers}
                 </p>
               </div>
             </div>
             <a href="https://t.me/l2CriticalError" target="_blank" className="telegram-join-btn">
-              Join Telegram Channel
+              {t.joinTelegramChannel}
             </a>
           </div>
         </div>
@@ -417,7 +426,7 @@ function App() {
 
       {/* Server Button Section */}
       <section className="server-button-section">
-        <h2>🔗 Share Our Server</h2>
+        <h2>{t.shareOurServer}</h2>
         <div className="server-button-container">
           <a href="https://l2-servera.com" target="_blank" rel="noopener noreferrer">
             <img 
@@ -442,10 +451,9 @@ function App() {
 
       <footer>
         <p>
-          Inspired by legendary Lineage 2 servers — Arax, Starnet, Moscow,
-          L2Firebird, L2Reworld
+          {t.inspiredBy}
         </p>
-        <p>&copy; 2025 Lineage 2 CriticalError</p>
+        <p>{t.copyright}</p>
       </footer>
 
       {/* Patch Download Overlay */}
@@ -453,7 +461,7 @@ function App() {
         <div className="patch-overlay">
           <div className="patch-overlay-content">
             <div className="patch-overlay-header">
-              <h3>📦 Patch Download Instructions</h3>
+              <h3>{t.patchDownloadInstructions}</h3>
               <button className="close-overlay-btn" onClick={closePatchOverlay}>
                 ✕
               </button>
@@ -462,35 +470,35 @@ function App() {
               <div className="instruction-step">
                 <div className="step-number">1</div>
                 <div className="step-content">
-                  <h4>📥 Download Complete</h4>
-                  <p>The patch file <strong>system.7z</strong> has been downloaded to your computer.</p>
+                  <h4>{t.downloadComplete}</h4>
+                  <p>{t.downloadCompleteDesc}</p>
                 </div>
               </div>
               <div className="instruction-step">
                 <div className="step-number">2</div>
                 <div className="step-content">
-                  <h4>📂 Extract the Archive</h4>
-                  <p>Use 7-Zip, WinRAR, or any archive extractor to unzip the <strong>system.7z</strong> file.</p>
+                  <h4>{t.extractArchive}</h4>
+                  <p>{t.extractArchiveDesc}</p>
                 </div>
               </div>
               <div className="instruction-step">
                 <div className="step-number">3</div>
                 <div className="step-content">
-                  <h4>🎯 Install the Patch</h4>
-                  <p>Copy the extracted <strong>system</strong> folder and drop it into your Lineage 2 client directory, replacing the existing system folder.</p>
+                  <h4>{t.installPatch}</h4>
+                  <p>{t.installPatchDesc}</p>
                 </div>
               </div>
               <div className="instruction-step">
                 <div className="step-number">4</div>
                 <div className="step-content">
-                  <h4>✅ Restart Client</h4>
-                  <p>Close your Lineage 2 client completely and restart it to apply the patch.</p>
+                  <h4>{t.restartClient}</h4>
+                  <p>{t.restartClientDesc}</p>
                 </div>
               </div>
             </div>
             <div className="patch-overlay-footer">
               <button className="got-it-btn" onClick={closePatchOverlay}>
-                Got it! 👍
+                {t.gotIt}
               </button>
             </div>
           </div>
@@ -500,4 +508,8 @@ function App() {
   );
 }
 
-createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(
+  <LanguageProvider>
+    <App />
+  </LanguageProvider>
+);
