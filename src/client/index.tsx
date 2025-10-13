@@ -141,7 +141,7 @@ function GlobeSection() {
 }
 
 function App() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [serverStatus] = useState({
     online: true,
     players: 247,
@@ -359,13 +359,13 @@ function App() {
       <section className="links">
         <h2>{t.quickLinks}</h2>
         <div className="links-grid">
-          <a href="/guide" className="guide-link">
+          <a href={`/guide?lang=${language}`} className="guide-link">
             {t.guide}
           </a>
-          <a href="/server-info" className="server-info-link">
+          <a href={`/server-info?lang=${language}`} className="server-info-link">
             {t.serverDescription}
           </a>
-          <a href="/statistics" className="statistics-link">
+          <a href={`/statistics?lang=${language}`} className="statistics-link">
             {t.statistics}
           </a>
           <a href="https://drive.google.com/file/d/11v4G7CWplFG3PJ2RHisoJKMprvZQRsb3/view?usp=sharing" target="_blank">
