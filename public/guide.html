@@ -19,6 +19,7 @@
 
     <link rel="stylesheet" href="/normalize.css" />
     <link rel="stylesheet" href="/dist/index.css" />
+    <script src="/translations.js"></script>
     <style>
       body {
         font-family: 'Crimson Text', serif;
@@ -312,6 +313,51 @@
         margin-bottom: 0;
       }
 
+      /* Language Selector */
+      .language-selector {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+      }
+
+      .language-select {
+        background: linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #8b4513 100%);
+        color: #ffd700;
+        border: 2px solid #b8860b;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        box-shadow: 
+          0 4px 15px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        font-family: 'Cinzel', serif;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        min-width: 140px;
+      }
+
+      .language-select:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+          0 8px 25px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1),
+          0 0 20px rgba(255, 215, 0, 0.3);
+        color: #ffff00;
+        border-color: #ffd700;
+      }
+
+      .language-select option {
+        background: #2a2a2a;
+        color: #ffd700;
+        padding: 0.5rem;
+      }
+
       @media (max-width: 768px) {
         .info-grid {
           grid-template-columns: 1fr;
@@ -333,26 +379,35 @@
     </style>
   </head>
   <body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+      <select id="language-selector" class="language-select" onchange="window.TranslationSystem.setLanguage(this.value); window.TranslationSystem.translatePage();">
+        <option value="en">🇺🇸 English</option>
+        <option value="ro">🇷🇴 Română</option>
+        <option value="ru">🇷🇺 Русский</option>
+      </select>
+    </div>
+
     <div class="container">
       <header>
-        <h1>📖 Game Guide</h1>
-        <p>Complete setup guide for Lineage 2 CriticalError C4</p>
+        <h1 data-translate="gameGuide">📖 Game Guide</h1>
+        <p data-translate="completeSetupGuide">Complete setup guide for Lineage 2 CriticalError C4</p>
       </header>
 
-      <a href="/" class="back-link">← Back to Main Page</a>
+      <a href="/" class="back-link" data-translate="backToMainPage">← Back to Main Page</a>
 
       <div class="guide-section">
-        <h2>📥 Download & Installation</h2>
-        <p>Follow these steps to download and set up the Lineage 2 CriticalError C4 client:</p>
+        <h2 data-translate="downloadInstallation">📥 Download & Installation</h2>
+        <p data-translate="downloadInstallationDesc">Follow these steps to download and set up the Lineage 2 CriticalError C4 client:</p>
         
         <ol class="step-list">
           <li>
             <div class="step-number">1</div>
             <div class="step-content">
-              <h4>Download the Client</h4>
-              <p>Click the download button below to get the Lineage 2 CriticalError C4 client package.</p>
+              <h4 data-translate="downloadClient">Download the Client</h4>
+              <p data-translate="downloadClientDesc">Click the download button below to get the Lineage 2 CriticalError C4 client package.</p>
               <a href="https://drive.google.com/file/d/11v4G7CWplFG3PJ2RHisoJKMprvZQRsb3/view?usp=sharing" target="_blank" class="download-link">
-                📥 Download Client
+                <span data-translate="downloadClientButton">📥 Download Client</span>
               </a>
             </div>
           </li>
@@ -360,135 +415,135 @@
           <li>
             <div class="step-number">2</div>
             <div class="step-content">
-              <h4>Extract the Files</h4>
-              <p>Unzip the downloaded file to a folder on your computer. Make sure you have enough disk space (approximately 2-3 GB).</p>
+              <h4 data-translate="extractFiles">Extract the Files</h4>
+              <p data-translate="extractFilesDesc">Unzip the downloaded file to a folder on your computer. Make sure you have enough disk space (approximately 2-3 GB).</p>
             </div>
           </li>
           
           <li>
             <div class="step-number">3</div>
             <div class="step-content">
-              <h4>Run the Game</h4>
-              <p>Navigate to the extracted folder and run <strong>L2.exe</strong> from the system folder. This is the main game executable.</p>
+              <h4 data-translate="runGame">Run the Game</h4>
+              <p data-translate="runGameDesc">Navigate to the extracted folder and run <strong>L2.exe</strong> from the system folder. This is the main game executable.</p>
             </div>
           </li>
           
           <li>
             <div class="step-number">4</div>
             <div class="step-content">
-              <h4>Create Account</h4>
-              <p>Use our <b>Telegram registration bot</b> to create your game account: <a href="https://t.me/lineage2c4bot" target="_blank" style="color: #ffd700;">@lineage2c4bot</a></p>
-              <p>Alternatively, use our <b>Discord registration bot</b>: <a href="https://discord.com/oauth2/authorize?client_id=1415942904668749856" target="_blank" style="color: #ffd700;">Open Discord Bot</a></p>
+              <h4 data-translate="createAccount">Create Account</h4>
+              <p data-translate="createAccountDesc">Use our <b>Telegram registration bot</b> to create your game account: <a href="https://t.me/lineage2c4bot" target="_blank" style="color: #ffd700;">@lineage2c4bot</a></p>
+              <p data-translate="createAccountDesc2">Alternatively, use our <b>Discord registration bot</b>: <a href="https://discord.com/oauth2/authorize?client_id=1415942904668749856" target="_blank" style="color: #ffd700;" data-translate="openDiscordBot">Open Discord Bot</a></p>
             </div>
           </li>
         </ol>
 
         <div class="warning-box">
-          <h4>⚠️ Important Notes</h4>
-          <p>Make sure to run L2.exe as administrator if you encounter any permission issues. The game requires Windows operating system.</p>
+          <h4 data-translate="importantNotes">⚠️ Important Notes</h4>
+          <p data-translate="importantNotesDesc">Make sure to run L2.exe as administrator if you encounter any permission issues. The game requires Windows operating system.</p>
         </div>
       </div>
 
       <div class="guide-section">
-        <h2>🎮 Getting Started</h2>
-        <p>Once you have the client installed and your account created, here's how to begin your adventure:</p>
+        <h2 data-translate="gettingStarted">🎮 Getting Started</h2>
+        <p data-translate="gettingStartedDesc">Once you have the client installed and your account created, here's how to begin your adventure:</p>
         
         <div class="info-grid">
           <div class="info-card">
-            <h4>🏃‍♂️ Character Creation</h4>
-            <p>Choose your race and class carefully. Each has unique abilities and playstyles.</p>
+            <h4 data-translate="characterCreation">🏃‍♂️ Character Creation</h4>
+            <p data-translate="characterCreationDesc">Choose your race and class carefully. Each has unique abilities and playstyles.</p>
           </div>
           
           <div class="info-card">
-            <h4>⚔️ Combat System</h4>
-            <p>Learn the combat mechanics and skill combinations for your chosen class.</p>
+            <h4 data-translate="combatSystem">⚔️ Combat System</h4>
+            <p data-translate="combatSystemDesc">Learn the combat mechanics and skill combinations for your chosen class.</p>
           </div>
           
           <div class="info-card">
-            <h4>💰 Economy</h4>
-            <p>Understand the server rates: x10 XP/SP, x5 Adena, x5 Drops for optimal progression.</p>
+            <h4 data-translate="economy">💰 Economy</h4>
+            <p data-translate="economyDesc">Understand the server rates: x10 XP/SP, x5 Adena, x5 Drops for optimal progression.</p>
           </div>
           
           <div class="info-card">
-            <h4>👥 Community</h4>
-            <p>Join our Discord and Telegram channels to connect with other players.</p>
+            <h4 data-translate="community">👥 Community</h4>
+            <p data-translate="communityDesc">Join our Discord and Telegram channels to connect with other players.</p>
           </div>
         </div>
       </div>
 
       <div class="guide-section">
-        <h2>🔧 Server Features</h2>
-        <p>Our server includes several quality-of-life improvements:</p>
+        <h2 data-translate="serverFeatures">🔧 Server Features</h2>
+        <p data-translate="serverFeaturesDesc">Our server includes several quality-of-life improvements:</p>
         
         <ul class="step-list">
           <li>
             <div class="step-number">✨</div>
             <div class="step-content">
-              <h4>NPC Buffer</h4>
-              <p>Get buffs from NPCs to enhance your character's abilities.</p>
+              <h4 data-translate="npcBuffer">NPC Buffer</h4>
+              <p data-translate="npcBufferDesc">Get buffs from NPCs to enhance your character's abilities.</p>
             </div>
           </li>
           
           <li>
             <div class="step-number">🎓</div>
             <div class="step-content">
-              <h4>Master Class System</h4>
-              <p>NPC-based class changes with flexible progression paths.</p>
+              <h4 data-translate="masterClassSystem">Master Class System</h4>
+              <p data-translate="masterClassSystemDesc">NPC-based class changes with flexible progression paths.</p>
             </div>
           </li>
           
           <li>
             <div class="step-number">👑</div>
             <div class="step-content">
-              <h4>Noblesse & Subclasses</h4>
-              <p>No quest needed.</p>
+              <h4 data-translate="noblesseSubclasses">Noblesse & Subclasses</h4>
+              <p data-translate="noblesseSubclassesDesc">No quest needed.</p>
             </div>
           </li>
           
           <li>
             <div class="step-number">🏰</div>
             <div class="step-content">
-              <h4>Seven Signs & Sieges</h4>
-              <p>Participate in epic castle wars and faction battles.</p>
+              <h4 data-translate="sevenSignsSieges">Seven Signs & Sieges</h4>
+              <p data-translate="sevenSignsSiegesDesc">Participate in epic castle wars and faction battles.</p>
             </div>
           </li>
         </ul>
       </div>
 
       <div class="guide-section">
-        <h2>🌐 Community Links</h2>
-        <p>Stay connected with the community:</p>
+        <h2 data-translate="communityLinks">🌐 Community Links</h2>
+        <p data-translate="communityLinksDesc">Stay connected with the community:</p>
         
         <div class="info-grid">
           <div class="info-card">
-            <h4>💬 Discord</h4>
-            <p>Join our Discord server for real-time chat and support.</p>
-            <a href="https://discord.gg/NHdASD8h" target="_blank" style="color: #ffd700;">Join Discord</a>
+            <h4 data-translate="discord">💬 Discord</h4>
+            <p data-translate="discordDesc">Join our Discord server for real-time chat and support.</p>
+            <a href="https://discord.gg/NHdASD8h" target="_blank" style="color: #ffd700;" data-translate="joinDiscord">Join Discord</a>
           </div>
           
           <div class="info-card">
-            <h4>📱 Telegram</h4>
-            <p>Follow our Telegram channel for updates and announcements.</p>
-            <a href="https://t.me/l2CriticalError" target="_blank" style="color: #ffd700;">Join Telegram</a>
+            <h4 data-translate="telegram">📱 Telegram</h4>
+            <p data-translate="telegramDesc">Follow our Telegram channel for updates and announcements.</p>
+            <a href="https://t.me/l2CriticalError" target="_blank" style="color: #ffd700;" data-translate="joinTelegram">Join Telegram</a>
           </div>
           
           <div class="info-card">
-            <h4>🤖 Registration Bot</h4>
-            <p>Use our Telegram or Discord registration bots to create and manage your game account.</p>
+            <h4 data-translate="registrationBot">🤖 Registration Bot</h4>
+            <p data-translate="registrationBotDesc">Use our Telegram or Discord registration bots to create and manage your game account.</p>
             <div style="display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;">
-              <a href="https://t.me/lineage2c4bot" target="_blank" style="color: #ffd700;">Open Telegram Bot</a>
-              <a href="https://discord.com/oauth2/authorize?client_id=1415942904668749856" target="_blank" style="color: #ffd700;">Open Discord Bot</a>
+              <a href="https://t.me/lineage2c4bot" target="_blank" style="color: #ffd700;" data-translate="openTelegramBot">Open Telegram Bot</a>
+              <a href="https://discord.com/oauth2/authorize?client_id=1415942904668749856" target="_blank" style="color: #ffd700;" data-translate="openDiscordBot">Open Discord Bot</a>
             </div>
           </div>
         </div>
       </div>
 
       <footer>
-        <p>
+        <p data-translate="inspiredBy">
           Inspired by legendary Lineage 2 servers — Arax, Starnet, Moscow,
           L2Firebird, L2Reworld
         </p>
-        <p>&copy; 2025 Lineage 2 CriticalError</p>
+        <p data-translate="copyright">&copy; 2025 Lineage 2 CriticalError</p>
       </footer>
     </div>
   </body>
