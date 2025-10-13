@@ -20,6 +20,7 @@ t needed
 
     <link rel="stylesheet" href="/normalize.css" />
     <link rel="stylesheet" href="/dist/index.css" />
+    <script src="/translations.js"></script>
     <style>
       body {
         font-family: sans-serif;
@@ -158,6 +159,51 @@ t needed
         border-left: 4px solid #feca57;
       }
 
+      /* Language Selector */
+      .language-selector {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+      }
+
+      .language-select {
+        background: linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #8b4513 100%);
+        color: #ffd700;
+        border: 2px solid #b8860b;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        box-shadow: 
+          0 4px 15px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        font-family: 'Cinzel', serif;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        min-width: 140px;
+      }
+
+      .language-select:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+          0 8px 25px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1),
+          0 0 20px rgba(255, 215, 0, 0.3);
+        color: #ffff00;
+        border-color: #ffd700;
+      }
+
+      .language-select option {
+        background: #2a2a2a;
+        color: #ffd700;
+        padding: 0.5rem;
+      }
+
       @media (max-width: 768px) {
         .rates-grid {
           grid-template-columns: 1fr;
@@ -170,112 +216,121 @@ t needed
     </style>
   </head>
   <body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+      <select id="language-selector" class="language-select" onchange="window.TranslationSystem.setLanguage(this.value); window.TranslationSystem.translatePage();">
+        <option value="en">🇺🇸 English</option>
+        <option value="ro">🇷🇴 Română</option>
+        <option value="ru">🇷🇺 Русский</option>
+      </select>
+    </div>
+
     <div class="container">
       <header>
-        <h1>✨ Lineage 2 CriticalError C4 ✨</h1>
-        <p>Detailed Server Information</p>
+        <h1 data-translate="serverInfo">✨ Lineage 2 CriticalError C4 ✨</h1>
+        <p data-translate="detailedServerInfo">Detailed Server Information</p>
       </header>
 
-      <a href="/" class="back-link">← Back to Main Page</a>
+      <a href="/" class="back-link" data-translate="backToMainPage">← Back to Main Page</a>
 
       <div class="info-section">
-        <h2>🌟 Key Features</h2>
+        <h2 data-translate="keyFeatures">🌟 Key Features</h2>
         <ul class="feature-list">
-          <li><strong>Champion System</strong> – rare, powerful mobs with boosted drops.</li>
-          <li><strong>Class Master Support</strong> – NPC-based class changes with flexible progression.</li>
-          <li><strong>For Noblesse and Subclasses</strong> - No quest Needed</li>
-          <li><strong>NPC Buffer/NPC Shop</strong> – multiple buff schemes for convenience.</li>
-          <li><strong>Dual Boxing Support</strong> – multiple clients per IP allowed.</li>
-          <li><strong>Offline Trade</strong> – allowed</li>
-          <li><strong>Safe enchant 3 / Maximum enchant 10</strong></li>
+          <li data-translate="championSystem"><strong>Champion System</strong> – rare, powerful mobs with boosted drops.</li>
+          <li data-translate="classMasterSupport"><strong>Class Master Support</strong> – NPC-based class changes with flexible progression.</li>
+          <li data-translate="forNoblesseSubclasses"><strong>For Noblesse and Subclasses</strong> - No quest Needed</li>
+          <li data-translate="npcBufferNpcShop"><strong>NPC Buffer/NPC Shop</strong> – multiple buff schemes for convenience.</li>
+          <li data-translate="dualBoxingSupport"><strong>Dual Boxing Support</strong> – multiple clients per IP allowed.</li>
+          <li data-translate="offlineTrade"><strong>Offline Trade</strong> – allowed</li>
+          <li data-translate="safeEnchant"><strong>Safe enchant 3 / Maximum enchant 10</strong></li>
         </ul>
       </div>
 
       <div class="info-section">
-        <h2>📜 Gameplay Systems</h2>
+        <h2 data-translate="gameplaySystems">📜 Gameplay Systems</h2>
         <ul class="feature-list">
-          <li><strong>Seven Signs</strong> – fully working cycle with dungeon NPC access options.</li>
-          <li><strong>Sieges</strong> – classic castle wars with balanced guard pricing (x1).</li>
-          <li><strong>Edited Stats</strong> - for some Classes</li>
+          <li data-translate="sevenSigns"><strong>Seven Signs</strong> – fully working cycle with dungeon NPC access options.</li>
+          <li data-translate="sieges"><strong>Sieges</strong> – classic castle wars with balanced guard pricing (x1).</li>
+          <li data-translate="editedStats"><strong>Edited Stats</strong> - for some Classes</li>
         </ul>
       </div>
 
       <div class="info-section">
-        <h2>📊 Server Rates</h2>
+        <h2 data-translate="serverRates">📊 Server Rates</h2>
         <div class="rates-grid">
           <div class="rate-item">
             <div class="rate-value">x10</div>
-            <div class="rate-label">XP/SP</div>
+            <div class="rate-label" data-translate="xpSp">XP/SP</div>
           </div>
           <div class="rate-item">
             <div class="rate-value">x5</div>
-            <div class="rate-label">Adena</div>
+            <div class="rate-label" data-translate="adena">Adena</div>
           </div>
           <div class="rate-item">
             <div class="rate-value">x5</div>
-            <div class="rate-label">Drops/Spoil</div>
+            <div class="rate-label" data-translate="dropsSpoil">Drops/Spoil</div>
           </div>
           <div class="rate-item">
             <div class="rate-value">x5</div>
-            <div class="rate-label">Boss Drops</div>
+            <div class="rate-label" data-translate="bossDrops">Boss Drops</div>
           </div>
           <div class="rate-item">
             <div class="rate-value">x5</div>
-            <div class="rate-label">Quests (Adena, XP, SP, Rewards)</div>
+            <div class="rate-label" data-translate="quests">Quests (Adena, XP, SP, Rewards)</div>
           </div>
           <div class="rate-item">
             <div class="rate-value">x3</div>
-            <div class="rate-label">Manor</div>
+            <div class="rate-label" data-translate="manor">Manor</div>
           </div>
           <div class="rate-item">
             <div class="rate-value">x3</div>
-            <div class="rate-label">Fishing Extract</div>
+            <div class="rate-label" data-translate="fishingExtract">Fishing Extract</div>
           </div>
           <div class="rate-item">
             <div class="rate-value">x15</div>
-            <div class="rate-label">Pet XP</div>
+            <div class="rate-label" data-translate="petXp">Pet XP</div>
           </div>
           <div class="rate-item">
             <div class="rate-value">x1</div>
-            <div class="rate-label">Consumables (retail)</div>
+            <div class="rate-label" data-translate="consumables">Consumables (retail)</div>
           </div>
         </div>
       </div>
 
       <div class="info-section">
-        <h2>⚖️ Game Balance</h2>
-        <p>
+        <h2 data-translate="gameBalance">⚖️ Game Balance</h2>
+        <p data-translate="gameBalanceDesc">
           PvP, Karma, and drop rules are balanced for fair play while keeping the old-school C4 feel.
         </p>
         <div class="warning">
-          <strong>Note:</strong> This server maintains the authentic C4 experience with balanced rates and features designed for fair and enjoyable gameplay.
+          <strong data-translate="gameBalanceNote">Note:</strong> This server maintains the authentic C4 experience with balanced rates and features designed for fair and enjoyable gameplay.
         </div>
       </div>
 
       <div class="info-section">
-        <h2>🔗 Quick Links</h2>
+        <h2 data-translate="quickLinks">🔗 Quick Links</h2>
         <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-          <a href="https://t.me/l2CriticalError" target="_blank" style="color: #ccc; text-decoration: none; padding: 0.5rem 1rem; border: 1px solid #333; border-radius: 6px; transition: all 0.3s ease;">
+          <a href="https://t.me/l2CriticalError" target="_blank" style="color: #ccc; text-decoration: none; padding: 0.5rem 1rem; border: 1px solid #333; border-radius: 6px; transition: all 0.3s ease;" data-translate="telegramChannel">
             📢 Telegram Channel
           </a>
-          <a href="https://t.me/lineage2c4bot" target="_blank" style="color: #ccc; text-decoration: none; padding: 0.5rem 1rem; border: 1px solid #333; border-radius: 6px; transition: all 0.3s ease;">
+          <a href="https://t.me/lineage2c4bot" target="_blank" style="color: #ccc; text-decoration: none; padding: 0.5rem 1rem; border: 1px solid #333; border-radius: 6px; transition: all 0.3s ease;" data-translate="telegramRegistrationBot">
             🤖 Telegram registration bot
           </a>
-          <a href="https://discord.com/oauth2/authorize?client_id=1415942904668749856" target="_blank" style="color: #ccc; text-decoration: none; padding: 0.5rem 1rem; border: 1px solid #333; border-radius: 6px; transition: all 0.3s ease;">
+          <a href="https://discord.com/oauth2/authorize?client_id=1415942904668749856" target="_blank" style="color: #ccc; text-decoration: none; padding: 0.5rem 1rem; border: 1px solid #333; border-radius: 6px; transition: all 0.3s ease;" data-translate="discordRegistrationBot">
             💬 Discord registration bot
           </a>
-          <a href="https://drive.google.com/file/d/11v4G7CWplFG3PJ2RHisoJKMprvZQRsb3/view?usp=sharing" target="_blank" style="color: #ccc; text-decoration: none; padding: 0.5rem 1rem; border: 1px solid #333; border-radius: 6px; transition: all 0.3s ease;">
+          <a href="https://drive.google.com/file/d/11v4G7CWplFG3PJ2RHisoJKMprvZQRsb3/view?usp=sharing" target="_blank" style="color: #ccc; text-decoration: none; padding: 0.5rem 1rem; border: 1px solid #333; border-radius: 6px; transition: all 0.3s ease;" data-translate="downloadClient">
             📥 Download Client
           </a>
         </div>
       </div>
 
       <footer>
-        <p>
+        <p data-translate="inspiredBy">
           Inspired by legendary Lineage 2 servers — Arax, Starnet, Moscow,
           L2Firebird, L2Reworld
         </p>
-        <p>&copy; 2025 Lineage 2 CriticalError</p>
+        <p data-translate="copyright">&copy; 2025 Lineage 2 CriticalError</p>
       </footer>
     </div>
   </body>
