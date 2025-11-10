@@ -446,12 +446,13 @@ function App() {
               className="server-button"
             />
           </a>
-         <a href="https://l2anons.adenium.online/index.php" target="_blank">
-           <img 
-             src="https://l2anons.adenium.online/assets/l2anonsknopka.jpg" 
-             alt="L2Anons Adenium" 
-             style="width:160px; height:auto; border:none;">
-         </a>
+          <a href="https://l2anons.adenium.online/index.php" target="_blank" rel="noopener noreferrer">
+            <img 
+              src="https://l2anons.adenium.online/assets/l2anonsknopka.jpg" 
+              alt="L2Anons Adenium" 
+              style={{ width: "160px", height: "auto", border: "none" }}
+            />
+          </a>
         </div>
       </section>
 
