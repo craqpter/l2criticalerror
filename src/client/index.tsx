@@ -455,7 +455,6 @@ function App() {
           </a>
         </div>
       </section>
-
       <footer>
         <p>
           {t.inspiredBy}
