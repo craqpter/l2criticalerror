@@ -96,7 +96,7 @@ const translations = {
     topPlayers: '🏆 Top Players',
     serverStats: '📊 Server Statistics',
     totalPlayers: 'Total Players',
-    onlinePlayers: 'Online Players',
+    onlinePlayers: 'Max Online Players',
     totalGuilds: 'Total Guilds',
     serverUptime: 'Server Uptime'
   },
@@ -196,7 +196,7 @@ const translations = {
     topPlayers: '🏆 Top Jucători',
     serverStats: '📊 Statisticile Serverului',
     totalPlayers: 'Total Jucători',
-    onlinePlayers: 'Jucători Online',
+    onlinePlayers: 'Max Jucători Online',
     totalGuilds: 'Total Guild-uri',
     serverUptime: 'Timpul de Funcționare al Serverului'
   },
@@ -296,7 +296,7 @@ const translations = {
     topPlayers: '🏆 Топ Игроков',
     serverStats: '📊 Статистика Сервера',
     totalPlayers: 'Всего Игроков',
-    onlinePlayers: 'Игроков Онлайн',
+    onlinePlayers: 'Maкc Игроков Онлайн',
     totalGuilds: 'Всего Гильдий',
     serverUptime: 'Время Работы Сервера'
   }
@@ -354,3 +354,4 @@ window.TranslationSystem = {
   translatePage,
   translations
 };
+
