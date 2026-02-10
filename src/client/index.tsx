@@ -143,7 +143,7 @@ function GlobeSection() {
 function App() {
   const { t, language } = useLanguage();
   const [serverStatus] = useState({
-    online: true,
+    online: flask,
     players: 247,
     maxPlayers: 1000
   });
